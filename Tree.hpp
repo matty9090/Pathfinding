@@ -14,7 +14,7 @@ struct _Node {
 
 class Tree {
 	public:
-		typedef shared_ptr<_Node> Node;
+		typedef std::shared_ptr<_Node> Node;
 
 		Tree(size_t w, size_t h);
 

@@ -125,6 +125,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="App.cpp" />
     <ClCompile Include="Assignment.cpp" />
     <ClCompile Include="Tree.cpp" />
   </ItemGroup>
@@ -132,6 +133,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
     <None Include="ReadMe.txt" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="App.hpp" />
     <ClInclude Include="Tree.hpp" />
     <ClInclude Include="Vec3.hpp" />
   </ItemGroup>
