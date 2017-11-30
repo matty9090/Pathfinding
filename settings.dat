@@ -2,17 +2,21 @@
 	"window_w": 1024,
 	"window_h": 768,
 
-	"models": {
-		"node": {
-			"file": "Cube.x"
+	"models": [
+		{
+			"name": "node",
+			"file": "Cube.x",
+			"tex": "BlackBall.jpg"
 		},
 		
-		"floor": {
+		{
+			"name": "floor",
 			"file": "Floor.x"
 		},
 		
-		"skybox": {
+		{
+			"name": "skybox",
 			"file": "Skybox.x"
 		}
-	}
+	]
 }

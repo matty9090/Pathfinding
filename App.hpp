@@ -1,6 +1,7 @@
 #pragma once
 
 #include <TL-Engine.h>
+#include <map>
 
 class App {
 	public:
@@ -11,4 +12,6 @@ class App {
 
 	private:
 		tle::I3DEngine *eng;
+
+		std::map<string, tle::IModel> models;
 };

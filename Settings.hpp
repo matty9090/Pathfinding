@@ -16,6 +16,8 @@ class Settings {
 			std::string file, tex;
 		};
 
+		std::map<std::string, Model> getModels() { return models; }
+
 	private:
 		picojson::value json;
 
@@ -24,4 +26,5 @@ class Settings {
 		std::map<std::string, Model> models;
 
 		void load_properties();
+		void load_models();
 };
