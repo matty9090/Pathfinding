@@ -6,7 +6,7 @@ void main() {
 	I3DEngine* myEngine = New3DEngine(kTLX);
 	myEngine->StartWindowed();
 
-	myEngine->AddMediaFolder("C:\\ProgramData\\TL-Engine\\Media");
+	myEngine->AddMediaFolder("./res");
 
 	while(myEngine->IsRunning()) {
 		myEngine->DrawScene();
