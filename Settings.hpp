@@ -1,11 +1,27 @@
 #pragma once
 
 #include <string>
+#include <map>
+
+#include "JSON.hpp"
 
 class Settings {
 	public:
 		Settings(std::string file);
 
+		size_t getScreenW() { return window_w; }
+		size_t getScreenH() { return window_h; }
+
+		struct Model {
+			std::string file, tex;
+		};
+
 	private:
+		picojson::value json;
+
+		size_t window_w, window_h;
 		
+		std::map<std::string, Model> models;
+
+		void load_properties();
 };
