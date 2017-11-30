@@ -1,0 +1,15 @@
+{
+	"models": {
+		"node": {
+			"file": "Cube.x"
+		},
+		
+		"floor": {
+			"file": "Floor.x"
+		},
+		
+		"skybox": {
+			"file": "Skybox.x"
+		}
+	}
+}
