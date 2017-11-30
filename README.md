@@ -1,3 +1,0 @@
-# Pathfinding
-
-## Visualise pathfinding algorithms
