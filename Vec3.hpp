@@ -1,6 +1,6 @@
 #pragma once
 
-template <class T> struct Vec3 {
+template <class T = float> struct Vec3 {
 	T x, y, z;
 	
 	Vec3() : x(0), y(0), z(0) {};
