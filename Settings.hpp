@@ -23,7 +23,8 @@ class Settings {
 			Vec2<size_t> dims;
 		};
 
-		std::map<std::string, Model> getModels() { return models; }
+		std::map<std::string, Model> &getModels() { return models; }
+		std::map<std::string, Map> &getMaps() { return maps; }
 
 	private:
 		picojson::value json;

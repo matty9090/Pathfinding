@@ -1,6 +1,7 @@
 #pragma once
 
 #include <TL-Engine.h>
+#include <vector>
 
 #include "Settings.hpp"
 #include "State.hpp"
@@ -12,6 +13,11 @@ class StatePathfinder : public State {
 		void init();
 		int run();
 
-	private:
+		void free_memory();
 
+	private:
+		Vec2<> start, goal;
+		Vec2<size_t> dims;
+
+		std::vector<std::vector<int>> map;
 };

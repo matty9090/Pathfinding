@@ -19,10 +19,21 @@ std::vector<std::vector<int>> MapLoader::load(std::string map_file) {
 	if (mapf.is_open()) {
 		alloc_space(v);
 
-		for (unsigned y = 0; y < h; ++y)
-			for (unsigned x = 0; x < w; ++w)
-				mapf >> v[y][x];
+		for (unsigned y = 0; y < h; ++y) {
+			for (unsigned x = 0; x < w; ++x) {
+				char c;
+				mapf.get(c);
+
+				// Process end of line character
+				if (x >= w - 1)
+					mapf.get(c);
+				else
+					v[y][x] = (int)(c - '0');
+			}
+		}
 	}
+
+	mapf.close();
 
 	return v;
 }
@@ -40,6 +51,8 @@ std::pair<Vec2<>, Vec2<>> MapLoader::coords(std::string coords_file) {
 		start.x = x0, start.y = y0;
 		goal.x  = x1, goal.y  = y1;
 	}
+
+	coordf.close();
 	
 	return make_pair(start, goal);
 }
