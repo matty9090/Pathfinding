@@ -21,8 +21,10 @@ void StatePathfinder::init() {
 	load_models();
 
 	float scale = settings.getMapScale();
-	Vec3<> origin(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, (float)dims.y * scale);
+	Vec3<> origin(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, 10.0f);
 	map.constructMap(origin, scale);
+
+	tree.pathfind_bfs(start, goal);
 }
 
 int StatePathfinder::run() {
@@ -47,9 +49,7 @@ void StatePathfinder::load_maps() {
 	loader.setDims(dims.x, dims.y);
 
 	auto m = loader.load(settings.getMapsFolder() + cur_map.map_file);
-	coords = loader.coords(cur_map.coords_file);
-
-	start = tree.findNode(coords.first), goal = tree.findNode(coords.second);
+	coords = loader.coords(settings.getMapsFolder() + cur_map.coords_file);
 
 	map.map.resize(dims.y);
 
@@ -59,6 +59,11 @@ void StatePathfinder::load_maps() {
 	for (unsigned y = 0; y < dims.y; ++y)
 		for (unsigned x = 0; x < dims.x; ++x)
 			map.map[y][x] = tree.setNode(x, y, Vec2<>(x, y), m[y][x]);
+
+	start = tree.findNode(coords.first), goal = tree.findNode(coords.second);
+
+	Tree::Node n = tree.findNode(Vec2<>(3, 2));
+	cout << "Node " << n->pos.toString() << " costs " << n->cost << endl;
 }
 
 void StatePathfinder::load_models() {
@@ -111,5 +116,5 @@ void StatePathfinder::NodeMap::constructMap(Vec3<> origin, float scale) {
 }
 
 Vec3<> StatePathfinder::NodeMap::translate(Vec2<> coord, Vec3<> &origin, float scale) {
-	return Vec3<>(coord.x * scale + origin.x, origin.y, -coord.y * scale + origin.z);
+	return Vec3<>(coord.x * scale + origin.x, origin.y, coord.y * scale + origin.z);
 }

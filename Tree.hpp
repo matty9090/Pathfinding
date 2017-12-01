@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <list>
 
 #include "Vec3.hpp"
 
@@ -21,6 +22,8 @@ class Tree {
 		Node setNode(unsigned x, unsigned y, Vec2<> pos, int cost = 1);
 		Node getNode(unsigned x, unsigned y);
 		Node findNode(Vec2<> pos);
+
+		std::list<Vec2<>> pathfind_bfs(Node start, Node goal);
 
 	private:
 		std::vector<std::vector<Node>> &grid;

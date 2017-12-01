@@ -28,7 +28,7 @@ std::vector<std::vector<int>> MapLoader::load(std::string map_file) {
 				if (x >= w)
 					continue;
 				else
-					v[y][x] = (int)(c - '0');
+					v[h - y - 1][x] = (int)(c - '0');
 			}
 		}
 	}
@@ -53,7 +53,7 @@ std::pair<Vec2<>, Vec2<>> MapLoader::coords(std::string coords_file) {
 	}
 
 	coordf.close();
-	
+
 	return make_pair(start, goal);
 }
 
