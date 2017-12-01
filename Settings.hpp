@@ -16,6 +16,8 @@ class Settings {
 
 		struct Model {
 			std::string file, tex;
+			Vec3<> pos;
+			bool inst;
 		};
 
 		struct Map {

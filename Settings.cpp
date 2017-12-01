@@ -39,6 +39,15 @@ void Settings::load_models() {
 			cout << " using texture " << tex;
 		}
 
+		if (!model.get("x").is<picojson::null>()) {
+			float x = (float)model.get("x").get<double>();
+			float y = (float)model.get("y").get<double>();
+			float z = (float)model.get("z").get<double>();
+
+			models[name].inst = true;
+			models[name].pos  = Vec3<>(x, y, z);
+		}
+
 		models[name].file = file;
 		models[name].tex = tex;
 

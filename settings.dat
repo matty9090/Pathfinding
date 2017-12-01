@@ -31,12 +31,17 @@
 		
 		{
 			"name": "floor",
-			"file": "Floor.x"
+			"file": "Floor.x",
+			"tex": "Baize.jpg",
+			
+			"x": 0, "y": 0, "z": 0
 		},
 		
 		{
 			"name": "skybox",
-			"file": "Skybox.x"
+			"file": "Skybox.x",
+			
+			"x": 0, "y": -960, "z": 0
 		}
 	]
 }
