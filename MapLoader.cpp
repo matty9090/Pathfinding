@@ -20,13 +20,13 @@ std::vector<std::vector<int>> MapLoader::load(std::string map_file) {
 		alloc_space(v);
 
 		for (unsigned y = 0; y < h; ++y) {
-			for (unsigned x = 0; x < w; ++x) {
+			for (unsigned x = 0; x <= w; ++x) {
 				char c;
 				mapf.get(c);
 
-				// Process end of line character
-				if (x >= w - 1)
-					mapf.get(c);
+				// Skip end of line character
+				if (x >= w)
+					continue;
 				else
 					v[y][x] = (int)(c - '0');
 			}
