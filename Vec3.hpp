@@ -27,6 +27,10 @@ template <class T = int> struct Vec2 {
 	Vec2() : x(0), y(0) {}
 	Vec2(T _x, T _y) : x(_x), y(_y) {}
 
+	inline Vec2 operator-(Vec2 v) {
+		return Vec2(x - v.x, y - v.y);
+	}
+
 	std::string toString() {
 		return "(" + to_string(x) + ", " + to_string(y) + ")";
 	}

@@ -63,6 +63,13 @@
 			"file": "Cube.x",
 			"tex": "Wall.jpg",
 			"scale": 1.1
+		},
+		
+		{
+			"name": "Path",
+			"file": "Cube.x",
+			"tex": "red.jpg",
+			"scale": 0.12
 		}
 	]
 }

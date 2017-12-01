@@ -3,6 +3,7 @@
 #include <TL-Engine.h>
 #include <vector>
 #include <map>
+#include <list>
 #include <memory>
 
 #include "Settings.hpp"
@@ -25,11 +26,14 @@ class StatePathfinder : public State {
 		Tree::Node start, goal;
 		Vec2<size_t> dims;
 
+		float scale;
+		Vec3<> origin;
+
 		tle::ICamera *cam;
+		std::vector<tle::IModel*> path;
 
 		std::map<std::string, tle::IMesh*> meshes;
 		std::map<std::string, tle::IModel*> models;
-
 		std::map<int, std::pair<std::string, int>> node_types;
 
 		struct NodeMap {
@@ -43,4 +47,6 @@ class StatePathfinder : public State {
 			void constructMap(Vec3<> origin, float scale);
 			inline Vec3<> translate(Vec2<> coord, Vec3<> &origin, float scale);
 		} map;
+
+		void displayPath(std::list<Vec2<>> path);
 };

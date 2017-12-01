@@ -20,11 +20,11 @@ void StatePathfinder::init() {
 	load_maps();
 	load_models();
 
-	float scale = settings.getMapScale();
-	Vec3<> origin(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, 10.0f);
-	map.constructMap(origin, scale);
+	scale = settings.getMapScale();
+	origin = Vec3<>(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, 10.0f);
 
-	tree.pathfind_bfs(start, goal);
+	map.constructMap(origin, scale);
+	displayPath(tree.pathfind_bfs(start, goal));
 }
 
 int StatePathfinder::run() {
@@ -93,6 +93,18 @@ void StatePathfinder::free_memory() {
 		map.map[y].clear();
 
 	map.map.clear();
+}
+
+void StatePathfinder::displayPath(std::list<Vec2<>> p) {
+	Vec2<> prev;
+
+	for (auto coord : p) {
+		path.push_back(meshes["Path"]->CreateModel(coord.x * scale + origin.x, origin.y + 5.4f, coord.y * scale + origin.z));
+		path.back()->SetSkin(settings.getModels()["Path"].tex);
+		path.back()->Scale(settings.getModels()["Path"].scale);
+
+		prev = coord;
+	}
 }
 
 void StatePathfinder::NodeMap::constructMap(Vec3<> origin, float scale) {
