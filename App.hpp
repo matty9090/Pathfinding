@@ -2,8 +2,11 @@
 
 #include <TL-Engine.h>
 #include <map>
+#include <memory>
+#include <vector>
 
 #include "Settings.hpp"
+#include "StatePathfinder.hpp"
 
 class App {
 	public:
@@ -13,6 +16,9 @@ class App {
 		void run();
 
 	private:
+		int state;
+		std::vector<std::unique_ptr<State>> states;
+
 		Settings &settings;
 		tle::I3DEngine *eng;
 

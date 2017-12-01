@@ -7,6 +7,10 @@ App::App(Settings &s) : settings(s) {
 
 	eng->StartWindowed(settings.getScreenW(), settings.getScreenH());
 	eng->AddMediaFolder("./res");
+
+	state = State::Pathfinder;
+
+	states.push_back(make_unique<StatePathfinder>());
 }
 
 App::~App() {
@@ -14,7 +18,8 @@ App::~App() {
 }
 
 void App::run() {
-	while (eng->IsRunning()) {
-		eng->DrawScene();
-	}
+	do {
+		states[state]->init(eng);
+		state = states[state]->run();
+	} while (state != State::Exit);
 }
