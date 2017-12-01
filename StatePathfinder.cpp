@@ -5,7 +5,7 @@
 
 using namespace tle;
 
-StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings) : State(engine, settings) {
+StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings) : State(engine, settings), map(*this) {
 	
 }
 
@@ -15,7 +15,9 @@ void StatePathfinder::init() {
 	load_maps();
 	load_models();
 
-	map.constructMap(Vec3<>());
+	float scale = settings.getMapScale();
+	Vec3<> origin(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 6.0f, 0.0f);
+	map.constructMap(origin, scale);
 }
 
 int StatePathfinder::run() {
@@ -53,14 +55,14 @@ void StatePathfinder::load_models() {
 
 		if (mesh.second.inst) {
 			models[mesh.first] = meshes[mesh.first]->CreateModel(mesh.second.pos.x, mesh.second.pos.y, mesh.second.pos.z);
-			
+
 			if(!mesh.second.tex.empty())
 				models[mesh.first]->SetSkin(mesh.second.tex);
 		}
 	}
 
 	assert(models.find("floor") != models.end());
-	cam->RotateX(20.0f);
+	cam->RotateX(22.0f);
 }
 
 void StatePathfinder::free_memory() {
@@ -70,6 +72,24 @@ void StatePathfinder::free_memory() {
 	map.map.clear();
 }
 
-void StatePathfinder::NodeMap::constructMap(Vec3<> origin) {
-	
+void StatePathfinder::NodeMap::constructMap(Vec3<> origin, float scale) {
+	models.resize(parent.dims.y);
+
+	for (unsigned y = 0; y < parent.dims.y; ++y)
+		models[y].resize(parent.dims.x);
+
+	for (unsigned y = 0; y < parent.dims.y; ++y) {
+		for (unsigned x = 0; x < parent.dims.y; ++x) {
+			Vec3<> v = translate(Vec2<>(x, y), origin, scale);
+			models[y][x] = parent.meshes["node"]->CreateModel(v.x, v.y, v.z);
+			models[y][x]->Scale(parent.settings.getModels()["node"].scale);
+
+			if(!parent.settings.getModels()["node"].tex.empty())
+				models[y][x]->SetSkin(parent.settings.getModels()["node"].tex);
+		}
+	}
+}
+
+Vec3<> StatePathfinder::NodeMap::translate(Vec2<> coord, Vec3<> &origin, float scale) {
+	return Vec3<>(coord.x * scale + origin.x, origin.y, coord.y * scale + origin.z);
 }

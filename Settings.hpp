@@ -12,12 +12,14 @@ class Settings {
 
 		size_t getScreenW() { return window_w; }
 		size_t getScreenH() { return window_h; }
+		float getMapScale() { return map_scale; }
 		std::string getMapsFolder() { return maps_folder; }
 
 		struct Model {
 			std::string file, tex;
 			Vec3<> pos;
 			bool inst;
+			float scale;
 		};
 
 		struct Map {
@@ -31,6 +33,7 @@ class Settings {
 	private:
 		picojson::value json;
 
+		float map_scale;
 		size_t window_w, window_h;
 		std::string maps_folder;
 		

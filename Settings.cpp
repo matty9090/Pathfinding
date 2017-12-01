@@ -19,7 +19,8 @@ void Settings::load_properties() {
 	window_w = (size_t)json.get("window_w").get<double>();
 	window_h = (size_t)json.get("window_h").get<double>();
 
-	maps_folder = json.get("maps_folder").get<string>();
+	map_scale	= (float)json.get("map_scale").get<double>();
+	maps_folder	= json.get("maps_folder").get<string>();
 }
 
 void Settings::load_models() {
@@ -31,12 +32,18 @@ void Settings::load_models() {
 		string name = model.get("name").get<string>();
 		string file = model.get("file").get<string>();
 		string tex  = "";
+		float scale = 1.0f;
 
 		cout << "\t" << name << "(" << file << ")";
 		
 		if (!model.get("tex").is<picojson::null>()) {
 			tex = model.get("tex").get<string>();
 			cout << " using texture " << tex;
+		}
+
+		if (!model.get("scale").is<picojson::null>()) {
+			scale = (float)model.get("scale").get<double>();
+			cout << " scaled to " << scale;
 		}
 
 		if (!model.get("x").is<picojson::null>()) {
@@ -47,9 +54,10 @@ void Settings::load_models() {
 			models[name].inst = true;
 			models[name].pos  = Vec3<>(x, y, z);
 		}
-
-		models[name].file = file;
+		
 		models[name].tex = tex;
+		models[name].file = file;
+		models[name].scale = scale;
 
 		cout << "\n";
 	}

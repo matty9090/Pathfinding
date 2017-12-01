@@ -30,8 +30,13 @@ class StatePathfinder : public State {
 
 		struct NodeMap {
 			std::vector<std::vector<int>> map;
-			std::vector<std::vector<tle::IModel*>> model;
+			std::vector<std::vector<tle::IModel*>> models;
 
-			void constructMap(Vec3<> origin);
+			StatePathfinder &parent;
+
+			NodeMap(StatePathfinder &_parent) : parent(_parent) {}
+
+			void constructMap(Vec3<> origin, float scale);
+			inline Vec3<> translate(Vec2<> coord, Vec3<> &origin, float scale);
 		} map;
 };

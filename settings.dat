@@ -2,6 +2,7 @@
 	"window_w": 1024,
 	"window_h": 768,
 	
+	"map_scale" : 12,
 	"maps_folder": "maps/",
 	
 	"maps": [
@@ -26,7 +27,8 @@
 		{
 			"name": "node",
 			"file": "Cube.x",
-			"tex": "BlackBall.jpg"
+			"tex": "BlackBall.jpg",
+			"scale": 0.3
 		},
 		
 		{
