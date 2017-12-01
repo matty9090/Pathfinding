@@ -1,5 +1,7 @@
 #pragma once
 
+#include <string>
+
 template <class T = float> struct Vec3 {
 	T x, y, z;
 	
@@ -13,6 +15,10 @@ template <class T = float> struct Vec3 {
 
 		return sqrtf(dx + dy + dz);
 	}
+
+	std::string toString() {
+		return "( " + to_string(x) + ", " + to_string(y) + ", " + to_string(z) + ")";
+	}
 };
 
 template <class T = int> struct Vec2 {
@@ -20,4 +26,8 @@ template <class T = int> struct Vec2 {
 
 	Vec2() : x(0), y(0) {}
 	Vec2(T _x, T _y) : x(_x), y(_y) {}
+
+	std::string toString() {
+		return "(" + to_string(x) + ", " + to_string(y) + ")";
+	}
 };
