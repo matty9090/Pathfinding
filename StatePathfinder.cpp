@@ -99,9 +99,9 @@ void StatePathfinder::displayPath(std::list<Vec2<>> p) {
 	Vec2<> prev;
 
 	for (auto coord : p) {
-		path.push_back(meshes["Path"]->CreateModel(coord.x * scale + origin.x, origin.y + 5.4f, coord.y * scale + origin.z));
-		path.back()->SetSkin(settings.getModels()["Path"].tex);
-		path.back()->Scale(settings.getModels()["Path"].scale);
+		path.push_back(meshes["Path_BFS"]->CreateModel(coord.x * scale + origin.x, origin.y + 5.4f, coord.y * scale + origin.z));
+		path.back()->SetSkin(settings.getModels()["Path_BFS"].tex);
+		path.back()->Scale(settings.getModels()["Path_BFS"].scale);
 
 		prev = coord;
 	}

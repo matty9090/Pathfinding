@@ -66,9 +66,16 @@
 		},
 		
 		{
-			"name": "Path",
+			"name": "Path_BFS",
 			"file": "Cube.x",
 			"tex": "red.jpg",
+			"scale": 0.12
+		},
+		
+		{
+			"name": "Path_AS",
+			"file": "Cube.x",
+			"tex": "blue.jpg",
 			"scale": 0.12
 		}
 	]
