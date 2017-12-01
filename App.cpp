@@ -19,7 +19,7 @@ App::~App() {
 
 void App::run() {
 	do {
-		states[state]->init(eng);
+		states[state]->init(eng, settings);
 		state = states[state]->run();
 	} while (state != State::Exit);
 }
