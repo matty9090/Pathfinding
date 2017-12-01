@@ -26,11 +26,12 @@ class StatePathfinder : public State {
 		Tree::Node start, goal;
 		Vec2<size_t> dims;
 
+		int pathNum;
 		float scale;
 		Vec3<> origin;
 
 		tle::ICamera *cam;
-		std::vector<tle::IModel*> path;
+		std::vector<std::vector<tle::IModel*>> path;
 
 		std::map<std::string, tle::IMesh*> meshes;
 		std::map<std::string, tle::IModel*> models;
@@ -48,5 +49,5 @@ class StatePathfinder : public State {
 			inline Vec3<> translate(Vec2<> coord, Vec3<> &origin, float scale);
 		} map;
 
-		void displayPath(std::list<Vec2<>> path);
+		void displayPath(std::list<Vec2<>> path, std::string id);
 };

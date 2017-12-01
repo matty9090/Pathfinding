@@ -15,6 +15,7 @@ StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings)
 }
 
 void StatePathfinder::init() {
+	pathNum = 0;
 	cam = engine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
 
 	load_maps();
@@ -24,7 +25,9 @@ void StatePathfinder::init() {
 	origin = Vec3<>(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, 10.0f);
 
 	map.constructMap(origin, scale);
-	displayPath(tree.pathfind_astar(start, goal));
+
+	displayPath(tree.pathfind_bfs(start, goal), "Path_BFS");
+	displayPath(tree.pathfind_astar(start, goal), "Path_AS");
 }
 
 int StatePathfinder::run() {
@@ -92,13 +95,14 @@ void StatePathfinder::free_memory() {
 	map.map.clear();
 }
 
-void StatePathfinder::displayPath(std::list<Vec2<>> p) {
+void StatePathfinder::displayPath(std::list<Vec2<>> p, string id) {
+	path.resize(++pathNum);
 	Vec2<> prev;
 
 	for (auto coord : p) {
-		path.push_back(meshes["Path_AS"]->CreateModel(coord.x * scale + origin.x, origin.y + 5.4f, coord.y * scale + origin.z));
-		path.back()->SetSkin(settings.getModels()["Path_AS"].tex);
-		path.back()->Scale(settings.getModels()["Path_AS"].scale);
+		path[pathNum - 1].push_back(meshes[id]->CreateModel(coord.x * scale + origin.x, origin.y + 5.0f + (pathNum), coord.y * scale + origin.z));
+		path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
+		path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
 
 		prev = coord;
 	}
