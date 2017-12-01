@@ -3,6 +3,7 @@
 #include <TL-Engine.h>
 #include <vector>
 #include <map>
+#include <memory>
 
 #include "Settings.hpp"
 #include "State.hpp"
@@ -24,7 +25,13 @@ class StatePathfinder : public State {
 
 		tle::ICamera *cam;
 
-		std::vector<std::vector<int>> map;
 		std::map<std::string, tle::IMesh*> meshes;
 		std::map<std::string, tle::IModel*> models;
+
+		struct NodeMap {
+			std::vector<std::vector<int>> map;
+			std::vector<std::vector<tle::IModel*>> model;
+
+			void constructMap(Vec3<> origin);
+		} map;
 };

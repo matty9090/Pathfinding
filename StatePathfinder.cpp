@@ -14,6 +14,8 @@ void StatePathfinder::init() {
 
 	load_maps();
 	load_models();
+
+	map.constructMap(Vec3<>());
 }
 
 int StatePathfinder::run() {
@@ -37,7 +39,7 @@ void StatePathfinder::load_maps() {
 	dims = cur_map.dims;
 	loader.setDims(dims.x, dims.y);
 
-	map = loader.load(settings.getMapsFolder() + cur_map.map_file);
+	map.map = loader.load(settings.getMapsFolder() + cur_map.map_file);
 	coords = loader.coords(cur_map.coords_file);
 
 	start = coords.first, goal = coords.second;
@@ -63,7 +65,11 @@ void StatePathfinder::load_models() {
 
 void StatePathfinder::free_memory() {
 	for (unsigned y = 0; y < dims.y; ++y)
-		map[y].clear();
+		map.map[y].clear();
 
-	map.clear();
+	map.map.clear();
+}
+
+void StatePathfinder::NodeMap::constructMap(Vec3<> origin) {
+	
 }
