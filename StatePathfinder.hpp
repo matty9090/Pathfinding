@@ -7,10 +7,11 @@
 
 class StatePathfinder : public State {
 	public:
-		void init(tle::I3DEngine *engine, Settings &settings);
+		StatePathfinder(tle::I3DEngine *engine, Settings &settings);
+
+		void init();
 		int run();
 
 	private:
-		Settings &settings;
-		tle::I3DEngine *engine;
+
 };

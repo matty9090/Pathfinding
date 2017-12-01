@@ -2,9 +2,12 @@
 
 using namespace tle;
 
-void StatePathfinder::init(I3DEngine *_engine, Settings &_settings) {
-	engine = _engine;
-	settings = _settings;
+StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings) : State(engine, settings) {
+
+}
+
+void StatePathfinder::init() {
+	
 }
 
 int StatePathfinder::run() {

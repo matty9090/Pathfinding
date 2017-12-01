@@ -10,7 +10,7 @@ App::App(Settings &s) : settings(s) {
 
 	state = State::Pathfinder;
 
-	states.push_back(make_unique<StatePathfinder>());
+	states.push_back(make_unique<StatePathfinder>(eng, settings));
 }
 
 App::~App() {
@@ -19,7 +19,7 @@ App::~App() {
 
 void App::run() {
 	do {
-		states[state]->init(eng, settings);
+		states[state]->init();
 		state = states[state]->run();
 	} while (state != State::Exit);
 }

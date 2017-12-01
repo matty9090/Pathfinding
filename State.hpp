@@ -4,8 +4,14 @@
 
 class State {
 	public:
-		virtual void init(tle::I3DEngine *engine, Settings &settings) = 0;
+		State(tle::I3DEngine *_engine, Settings &_settings) : engine(_engine), settings(_settings) {}
+
+		virtual void init() = 0;
 		virtual int run() = 0;
 
-		static enum States { Pathfinder, Exit };
+		enum States { Pathfinder, Exit };
+
+	protected:
+		Settings &settings;
+		tle::I3DEngine *engine;
 };
