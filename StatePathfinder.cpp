@@ -95,14 +95,31 @@ void StatePathfinder::free_memory() {
 	map.map.clear();
 }
 
+float StatePathfinder::lerp(float v0, float v1, float t) {
+	return (1 - t) * v0 + t * v1;
+}
+
 void StatePathfinder::displayPath(std::list<Vec2<>> p, string id) {
 	path.resize(++pathNum);
-	Vec2<> prev;
+
+	Vec2<> prev = p.front();
+	int steps = 10;
 
 	for (auto coord : p) {
-		path[pathNum - 1].push_back(meshes[id]->CreateModel(coord.x * scale + origin.x, origin.y + 5.0f + (pathNum), coord.y * scale + origin.z));
-		path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
-		path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
+		float px = prev.x * scale + origin.x;
+		float py = prev.y * scale + origin.z;
+
+		float x = coord.x * scale + origin.x;
+		float y = coord.y * scale + origin.z;
+
+		for (int i = 0; i < steps; i++) {
+			float cx = lerp(px, x, (float)i / (float)steps);
+			float cy = lerp(py, y, (float)i / (float)steps);
+
+			path[pathNum - 1].push_back(meshes[id]->CreateModel(cx, origin.y + 5.0f + (pathNum), cy));
+			path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
+			path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
+		}
 
 		prev = coord;
 	}

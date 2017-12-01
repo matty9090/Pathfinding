@@ -49,5 +49,6 @@ class StatePathfinder : public State {
 			inline Vec3<> translate(Vec2<> coord, Vec3<> &origin, float scale);
 		} map;
 
+		float lerp(float v0, float v1, float t);
 		void displayPath(std::list<Vec2<>> path, std::string id);
 };
