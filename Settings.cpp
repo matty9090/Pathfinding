@@ -10,6 +10,7 @@ Settings::Settings(string file) {
 
 	load_properties();
 	load_models();
+	load_maps();
 
 	f.close();
 }
@@ -31,7 +32,7 @@ void Settings::load_models() {
 		string file = model.get("file").get<string>();
 		string tex  = "";
 
-		cout << name << " (" << file << ")";
+		cout << "\t" << name << "(" << file << ")";
 		
 		if (!model.get("tex").is<picojson::null>()) {
 			tex = model.get("tex").get<string>();
@@ -42,6 +43,31 @@ void Settings::load_models() {
 		models[name].tex = tex;
 
 		cout << "\n";
+	}
+
+	cout << "\n";
+}
+
+void Settings::load_maps() {
+	picojson::array map_list = json.get("maps").get<picojson::array>();
+
+	cout << "Maps:\n\n";
+
+	for (auto model : map_list) {
+		string name  = model.get("name").get<string>();
+		string mfile = model.get("map_file").get<string>();
+		string cfile = model.get("coords_file").get<string>();
+		size_t map_w = (size_t)model.get("map_width").get<double>();
+		size_t map_h = (size_t)model.get("map_height").get<double>();
+
+		Vec2<size_t> dims(map_w, map_h);
+
+		maps[name].map_file = mfile;
+		maps[name].coords_file = cfile;
+		maps[name].dims = dims;
+
+		cout << "\t" << name << " " << dims.toString();
+		cout << " - " << mfile << ", " << cfile << "\n";
 	}
 
 	cout << "\n";
