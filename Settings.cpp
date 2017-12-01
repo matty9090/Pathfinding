@@ -13,6 +13,8 @@ Settings::Settings(string file) {
 	load_maps();
 
 	f.close();
+
+	current_map = "Map 1";
 }
 
 void Settings::load_properties() {

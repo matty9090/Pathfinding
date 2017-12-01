@@ -29,13 +29,14 @@ class Settings {
 
 		std::map<std::string, Model> &getModels() { return models; }
 		std::map<std::string, Map> &getMaps() { return maps; }
+		Map &currentMap() { return maps[current_map]; }
 
 	private:
 		picojson::value json;
 
 		float map_scale;
 		size_t window_w, window_h;
-		std::string maps_folder;
+		std::string maps_folder, current_map;
 		
 		std::map<std::string, Model> models;
 		std::map<std::string, Map> maps;

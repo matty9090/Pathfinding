@@ -5,7 +5,9 @@
 
 using namespace tle;
 
-StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings) : State(engine, settings), map(*this) {
+StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings)
+	: State(engine, settings), map(*this), tree(settings.currentMap().dims, map.map)
+{
 	node_types[0] = make_pair("Wall", 0);
 	node_types[1] = make_pair("Clear", 1);
 	node_types[2] = make_pair("Wood", 2);
@@ -44,10 +46,19 @@ void StatePathfinder::load_maps() {
 	dims = cur_map.dims;
 	loader.setDims(dims.x, dims.y);
 
-	map.map = loader.load(settings.getMapsFolder() + cur_map.map_file);
+	auto m = loader.load(settings.getMapsFolder() + cur_map.map_file);
 	coords = loader.coords(cur_map.coords_file);
 
-	start = coords.first, goal = coords.second;
+	start = tree.findNode(coords.first), goal = tree.findNode(coords.second);
+
+	map.map.resize(dims.y);
+
+	for (unsigned y = 0; y < dims.y; ++y)
+		map.map[y].resize(dims.x);
+
+	for (unsigned y = 0; y < dims.y; ++y)
+		for (unsigned x = 0; x < dims.x; ++x)
+			map.map[y][x] = tree.setNode(x, y, Vec2<>(x, y), m[y][x]);
 }
 
 void StatePathfinder::load_models() {
@@ -87,7 +98,7 @@ void StatePathfinder::NodeMap::constructMap(Vec3<> origin, float scale) {
 
 	for (unsigned y = 0; y < parent.dims.y; ++y) {
 		for (unsigned x = 0; x < parent.dims.y; ++x) {
-			string type = parent.node_types[map[y][x]].first;
+			string type = parent.node_types[map[y][x]->cost].first;
 			Vec3<> v = translate(Vec2<>(x, y), origin, scale);
 
 			models[y][x] = parent.meshes[type]->CreateModel(v.x, v.y, v.z);

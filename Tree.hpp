@@ -6,24 +6,24 @@
 #include "Vec3.hpp"
 
 struct _Node {
-	Vec3<> pos;
-	float cost;
+	Vec2<> pos;
+	int cost;
 
-	_Node(Vec3<> p, float c) : pos(p), cost(c) {};
+	_Node(Vec2<> p, int c) : pos(p), cost(c) {};
 };
 
 class Tree {
 	public:
 		typedef std::shared_ptr<_Node> Node;
 
-		Tree(size_t w, size_t h);
+		Tree(Vec2<size_t> dims, std::vector<std::vector<Node>> &_grid);
 
-		Node setNode(unsigned x, unsigned y, Vec3<> pos, float cost = 1.0f);
+		Node setNode(unsigned x, unsigned y, Vec2<> pos, float cost = 1.0f);
 		Node getNode(unsigned x, unsigned y);
-		Node findNode(Vec3<> pos, float max_d = 1.0f);
+		Node findNode(Vec2<> pos);
 
 	private:
-		std::vector<std::vector<Node>> grid;
+		std::vector<std::vector<Node>> &grid;
 
 		size_t w, h;
 };

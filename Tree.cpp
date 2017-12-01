@@ -2,14 +2,11 @@
 
 using namespace std;
 
-Tree::Tree(size_t _w, size_t _h) : w(_w), h(_h) {
-	grid.resize(h);
-
-	for (size_t i = 0; i < h; ++i)
-		grid[i].resize(w);
+Tree::Tree(Vec2<size_t> dims, std::vector<std::vector<Node>> &_grid) : w(dims.x), h(dims.y), grid(_grid) {
+	
 }
 
-Tree::Node Tree::setNode(unsigned x, unsigned y, Vec3<> pos, float cost) {
+Tree::Node Tree::setNode(unsigned x, unsigned y, Vec2<> pos, float cost) {
 	Node n = make_shared<_Node>(pos, cost);
 	grid[y][x] = n;
 
@@ -20,10 +17,10 @@ Tree::Node Tree::getNode(unsigned x, unsigned y) {
 	return grid[y][x];
 }
 
-Tree::Node Tree::findNode(Vec3<> pos, float max_d) {
+Tree::Node Tree::findNode(Vec2<> pos) {
 	for (auto rows : grid) {
 		for (auto node : rows) {
-			if (node->pos.distance(pos) < max_d)
+			if (node->pos.x == pos.x && node->pos.y == pos.y)
 				return node;
 		}
 	}
