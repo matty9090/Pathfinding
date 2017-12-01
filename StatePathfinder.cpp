@@ -24,7 +24,7 @@ void StatePathfinder::init() {
 	origin = Vec3<>(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, 10.0f);
 
 	map.constructMap(origin, scale);
-	displayPath(tree.pathfind_bfs(start, goal));
+	displayPath(tree.pathfind_astar(start, goal));
 }
 
 int StatePathfinder::run() {
@@ -61,9 +61,6 @@ void StatePathfinder::load_maps() {
 			map.map[y][x] = tree.setNode(x, y, Vec2<>(x, y), m[y][x]);
 
 	start = tree.findNode(coords.first), goal = tree.findNode(coords.second);
-
-	Tree::Node n = tree.findNode(Vec2<>(3, 2));
-	cout << "Node " << n->pos.toString() << " costs " << n->cost << endl;
 }
 
 void StatePathfinder::load_models() {
@@ -99,9 +96,9 @@ void StatePathfinder::displayPath(std::list<Vec2<>> p) {
 	Vec2<> prev;
 
 	for (auto coord : p) {
-		path.push_back(meshes["Path_BFS"]->CreateModel(coord.x * scale + origin.x, origin.y + 5.4f, coord.y * scale + origin.z));
-		path.back()->SetSkin(settings.getModels()["Path_BFS"].tex);
-		path.back()->Scale(settings.getModels()["Path_BFS"].scale);
+		path.push_back(meshes["Path_AS"]->CreateModel(coord.x * scale + origin.x, origin.y + 5.4f, coord.y * scale + origin.z));
+		path.back()->SetSkin(settings.getModels()["Path_AS"].tex);
+		path.back()->Scale(settings.getModels()["Path_AS"].scale);
 
 		prev = coord;
 	}
