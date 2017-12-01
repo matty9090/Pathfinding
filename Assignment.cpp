@@ -10,6 +10,6 @@ const std::string settings_file = "settings.dat";
 void main() {
 	Settings settings(settings_file);
 
-	App app(settings.getScreenW(), settings.getScreenH());
+	App app(settings);
 	app.run();
 }
