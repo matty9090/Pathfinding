@@ -34,7 +34,7 @@ void Settings::load_models() {
 		string tex  = "";
 		float scale = 1.0f;
 
-		cout << "\t" << name << "(" << file << ")";
+		cout << "\t" << name << " (" << file << ")";
 		
 		if (!model.get("tex").is<picojson::null>()) {
 			tex = model.get("tex").get<string>();

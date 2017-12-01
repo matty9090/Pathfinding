@@ -6,17 +6,20 @@
 using namespace tle;
 
 StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings) : State(engine, settings), map(*this) {
-	
+	node_types[0] = make_pair("Wall", 0);
+	node_types[1] = make_pair("Clear", 1);
+	node_types[2] = make_pair("Wood", 2);
+	node_types[3] = make_pair("Water", 3);
 }
 
 void StatePathfinder::init() {
-	cam = engine->CreateCamera(tle::kManual, 0.0f, 80.0f, -80.f);
+	cam = engine->CreateCamera(tle::kManual, 0.0f, 80.0f, -50.f);
 
 	load_maps();
 	load_models();
 
 	float scale = settings.getMapScale();
-	Vec3<> origin(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 6.0f, 0.0f);
+	Vec3<> origin(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, (float)dims.y * scale);
 	map.constructMap(origin, scale);
 }
 
@@ -61,8 +64,12 @@ void StatePathfinder::load_models() {
 		}
 	}
 
-	assert(models.find("floor") != models.end());
-	cam->RotateX(22.0f);
+	assert(meshes.find("Clear") != meshes.end());
+	assert(meshes.find("Wood")  != meshes.end());
+	assert(meshes.find("Water") != meshes.end());
+	assert(meshes.find("Wall")  != meshes.end());
+
+	cam->RotateX(30.0f);
 }
 
 void StatePathfinder::free_memory() {
@@ -80,16 +87,18 @@ void StatePathfinder::NodeMap::constructMap(Vec3<> origin, float scale) {
 
 	for (unsigned y = 0; y < parent.dims.y; ++y) {
 		for (unsigned x = 0; x < parent.dims.y; ++x) {
+			string type = parent.node_types[map[y][x]].first;
 			Vec3<> v = translate(Vec2<>(x, y), origin, scale);
-			models[y][x] = parent.meshes["node"]->CreateModel(v.x, v.y, v.z);
-			models[y][x]->Scale(parent.settings.getModels()["node"].scale);
 
-			if(!parent.settings.getModels()["node"].tex.empty())
-				models[y][x]->SetSkin(parent.settings.getModels()["node"].tex);
+			models[y][x] = parent.meshes[type]->CreateModel(v.x, v.y, v.z);
+			models[y][x]->Scale(parent.settings.getModels()[type].scale);
+
+			if(!parent.settings.getModels()[type].tex.empty())
+				models[y][x]->SetSkin(parent.settings.getModels()[type].tex);
 		}
 	}
 }
 
 Vec3<> StatePathfinder::NodeMap::translate(Vec2<> coord, Vec3<> &origin, float scale) {
-	return Vec3<>(coord.x * scale + origin.x, origin.y, coord.y * scale + origin.z);
+	return Vec3<>(coord.x * scale + origin.x, origin.y, -coord.y * scale + origin.z);
 }

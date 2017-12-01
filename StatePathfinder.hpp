@@ -28,6 +28,8 @@ class StatePathfinder : public State {
 		std::map<std::string, tle::IMesh*> meshes;
 		std::map<std::string, tle::IModel*> models;
 
+		std::map<int, std::pair<std::string, int>> node_types;
+
 		struct NodeMap {
 			std::vector<std::vector<int>> map;
 			std::vector<std::vector<tle::IModel*>> models;

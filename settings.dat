@@ -2,7 +2,7 @@
 	"window_w": 1024,
 	"window_h": 768,
 	
-	"map_scale" : 12,
+	"map_scale" : 11,
 	"maps_folder": "maps/",
 	
 	"maps": [
@@ -25,18 +25,9 @@
 
 	"models": [
 		{
-			"name": "node",
-			"file": "Cube.x",
-			"tex": "BlackBall.jpg",
-			"scale": 0.3
-		},
-		
-		{
 			"name": "floor",
 			"file": "Floor.x",
-			"tex": "Baize.jpg",
-			
-			"x": 0, "y": 0, "z": 0
+			"tex": "Baize.jpg"
 		},
 		
 		{
@@ -44,6 +35,34 @@
 			"file": "Skybox.x",
 			
 			"x": 0, "y": -960, "z": 0
+		},
+		
+		{
+			"name": "Clear",
+			"file": "Cube.x",
+			"tex": "Baize.jpg",
+			"scale": 1.1
+		},
+		
+		{
+			"name": "Wood",
+			"file": "Cube.x",
+			"tex": "wood2.jpg",
+			"scale": 1.1
+		},
+		
+		{
+			"name": "Water",
+			"file": "Cube.x",
+			"tex": "Water.jpg",
+			"scale": 1.1
+		},
+		
+		{
+			"name": "Wall",
+			"file": "Cube.x",
+			"tex": "Wall.jpg",
+			"scale": 1.1
 		}
 	]
 }
