@@ -2,7 +2,25 @@
 	"window_w": 1024,
 	"window_h": 768,
 	
-	"default_maps_folder:": "maps/",
+	"maps_folder": "maps/",
+	
+	"maps": [
+		{
+			"name": "Map 1",
+			"coords_file": "dCoords.txt",
+			"map_file": "dMap.txt",
+			"map_width": 10,
+			"map_height": 10
+		},
+		
+		{
+			"name": "Map 2",
+			"coords_file": "mCoords.txt",
+			"map_file": "mMap.txt",
+			"map_width": 10,
+			"map_height": 10
+		}
+	],
 
 	"models": [
 		{

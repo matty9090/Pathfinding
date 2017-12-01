@@ -13,5 +13,5 @@ class App {
 	private:
 		tle::I3DEngine *eng;
 
-		std::map<string, tle::IModel> models;
+		std::map<string, tle::IModel*> models;
 };

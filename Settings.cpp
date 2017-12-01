@@ -18,7 +18,7 @@ void Settings::load_properties() {
 	window_w = (size_t)json.get("window_w").get<double>();
 	window_h = (size_t)json.get("window_h").get<double>();
 
-	def_maps_folder = json.get("default_maps_folder").get<string>();
+	maps_folder = json.get("maps_folder").get<string>();
 }
 
 void Settings::load_models() {
