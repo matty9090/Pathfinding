@@ -11,6 +11,7 @@ class Settings {
 
 		size_t getScreenW() { return window_w; }
 		size_t getScreenH() { return window_h; }
+		std::string getDefMapsFolder() { return def_maps_folder; }
 
 		struct Model {
 			std::string file, tex;
@@ -22,6 +23,7 @@ class Settings {
 		picojson::value json;
 
 		size_t window_w, window_h;
+		std::string def_maps_folder;
 		
 		std::map<std::string, Model> models;
 
