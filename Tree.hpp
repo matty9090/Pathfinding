@@ -18,7 +18,7 @@ class Tree {
 
 		Tree(Vec2<size_t> dims, std::vector<std::vector<Node>> &_grid);
 
-		Node setNode(unsigned x, unsigned y, Vec2<> pos, float cost = 1.0f);
+		Node setNode(unsigned x, unsigned y, Vec2<> pos, int cost = 1);
 		Node getNode(unsigned x, unsigned y);
 		Node findNode(Vec2<> pos);
 

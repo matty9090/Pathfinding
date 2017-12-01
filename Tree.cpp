@@ -6,7 +6,7 @@ Tree::Tree(Vec2<size_t> dims, std::vector<std::vector<Node>> &_grid) : w(dims.x)
 	
 }
 
-Tree::Node Tree::setNode(unsigned x, unsigned y, Vec2<> pos, float cost) {
+Tree::Node Tree::setNode(unsigned x, unsigned y, Vec2<> pos, int cost) {
 	Node n = make_shared<_Node>(pos, cost);
 	grid[y][x] = n;
 
