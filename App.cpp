@@ -2,10 +2,10 @@
 
 using namespace tle;
 
-App::App(size_t w, size_t h) {
+App::App(Settings &s) : settings(s) {
 	eng = New3DEngine(kTLX);
 
-	eng->StartWindowed(w, h);
+	eng->StartWindowed(settings.getScreenW(), settings.getScreenH());
 	eng->AddMediaFolder("./res");
 }
 

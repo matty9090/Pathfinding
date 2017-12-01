@@ -1,16 +1,19 @@
 #pragma once
 
 #include <TL-Engine.h>
-#include <map>
+#include <map>#
+
+#include "Settings.hpp"
 
 class App {
 	public:
-		App(size_t w, size_t h);
+		App(Settings &settings);
 		~App();
 
 		void run();
 
 	private:
+		Settings &settings;
 		tle::I3DEngine *eng;
 
 		std::map<string, tle::IModel*> models;
