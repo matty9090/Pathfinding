@@ -13,7 +13,7 @@ StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings) : S
 }
 
 void StatePathfinder::init() {
-	cam = engine->CreateCamera(tle::kManual, 0.0f, 80.0f, -50.f);
+	cam = engine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
 
 	load_maps();
 	load_models();
@@ -69,7 +69,7 @@ void StatePathfinder::load_models() {
 	assert(meshes.find("Water") != meshes.end());
 	assert(meshes.find("Wall")  != meshes.end());
 
-	cam->RotateX(30.0f);
+	cam->RotateX(50.0f);
 }
 
 void StatePathfinder::free_memory() {
