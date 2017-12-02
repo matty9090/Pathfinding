@@ -95,10 +95,6 @@ std::list<Vec2<>> Tree::pathfind_bfs(Node start, Node goal) {
 	} else
 		cout << "Could not find path :(\n\n";
 
-	for (auto i = path.begin(); i != path.end(); ++i) {
-		std::cout << "(" << i->x << ", " << i->y << ")\n";
-	}
-
 	return path;
 }
 
@@ -128,8 +124,6 @@ std::list<Vec2<>> Tree::pathfind_astar(Node start, Node goal) {
 		for (auto n : open)
 			if (f_score[n] < min_score)
 				min_score = f_score[n], current = n;
-
-		cout << current->pos.toString() << endl;
 
 		if (current == goal) {
 			goal_found = true;

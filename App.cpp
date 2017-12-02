@@ -1,5 +1,8 @@
 #include "App.hpp"
 
+#include "StateMenu.hpp"
+#include "StatePathfinder.hpp"
+
 using namespace tle;
 
 App::App(Settings &s) : settings(s) {
@@ -8,8 +11,9 @@ App::App(Settings &s) : settings(s) {
 	eng->StartWindowed(settings.getScreenW(), settings.getScreenH());
 	eng->AddMediaFolder("./res");
 
-	state = State::Pathfinder;
+	state = State::Menu;
 
+	states.push_back(make_unique<StateMenu>(eng, settings));
 	states.push_back(make_unique<StatePathfinder>(eng, settings));
 }
 

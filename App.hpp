@@ -5,8 +5,8 @@
 #include <memory>
 #include <vector>
 
+#include "State.hpp"
 #include "Settings.hpp"
-#include "StatePathfinder.hpp"
 
 class App {
 	public:

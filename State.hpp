@@ -2,6 +2,8 @@
 
 #include <TL-Engine.h>
 
+#include "Settings.hpp"
+
 class State {
 	public:
 		State(tle::I3DEngine *_engine, Settings &_settings) : engine(_engine), settings(_settings) {}
@@ -9,7 +11,7 @@ class State {
 		virtual void init() = 0;
 		virtual int run() = 0;
 
-		enum States { Pathfinder, Exit };
+		enum States { Menu, Pathfinder, Exit };
 
 	protected:
 		Settings &settings;
