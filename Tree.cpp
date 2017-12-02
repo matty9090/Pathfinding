@@ -63,7 +63,7 @@ std::list<Vec2<>> Tree::pathfind_bfs(Node start, Node goal) {
 		next.push_back(findNode(Vec2<>(current->pos.x + 1, current->pos.y)));
 		next.push_back(findNode(Vec2<>(current->pos.x - 1, current->pos.y)));
 		next.push_back(findNode(Vec2<>(current->pos.x, current->pos.y + 1)));
-		next.push_back(findNode(Vec2<>(current->pos.x, current->pos.y + 1)));
+		next.push_back(findNode(Vec2<>(current->pos.x, current->pos.y - 1)));
 
 		for (auto node : next) {
 			if (node == nullptr || node->cost <= 0 || closed.find(node) != closed.end())
@@ -144,7 +144,7 @@ std::list<Vec2<>> Tree::pathfind_astar(Node start, Node goal) {
 		next.push_back(findNode(Vec2<>(current->pos.x + 1, current->pos.y)));
 		next.push_back(findNode(Vec2<>(current->pos.x - 1, current->pos.y)));
 		next.push_back(findNode(Vec2<>(current->pos.x, current->pos.y + 1)));
-		next.push_back(findNode(Vec2<>(current->pos.x, current->pos.y + 1)));
+		next.push_back(findNode(Vec2<>(current->pos.x, current->pos.y - 1)));
 		
 		for (auto node : next) {
 			if (node == nullptr || node->cost <= 0 || closed.find(node) != closed.end())
@@ -183,5 +183,5 @@ std::list<Vec2<>> Tree::pathfind_astar(Node start, Node goal) {
 
 // Manhattan Distance
 float Tree::heuristic(Node start, Node end) {
-	return (float)abs(start->pos.x - end->pos.x) + abs(start->pos.y - end->pos.y);
+	return (float)abs(start->pos.x - end->pos.x) + (float)abs(start->pos.y - end->pos.y);
 }
