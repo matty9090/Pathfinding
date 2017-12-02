@@ -9,6 +9,7 @@ App::App(Settings &s) : settings(s) {
 	eng = New3DEngine(kTLX);
 
 	eng->StartWindowed(settings.getScreenW(), settings.getScreenH());
+	eng->SetWindowCaption("Pathfinding");
 	eng->AddMediaFolder("./res");
 
 	state = State::Menu;
