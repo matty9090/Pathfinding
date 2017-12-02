@@ -1,7 +1,8 @@
 #include "StateMenu.hpp"
 #include "MapLoader.hpp"
 
-#include <cassert>
+#include <Windows.h>
+#include <Commdlg.h>
 
 using namespace tle;
 
@@ -52,7 +53,23 @@ int StateMenu::run() {
 }
 
 void StateMenu::action_select() {
+	OPENFILENAMEA inf;
+	ZeroMemory(&inf, sizeof(inf));
+	char file[100];
+	
+	inf.lStructSize = sizeof(inf);
+	inf.hwndOwner = NULL;
+	inf.lpstrFile = file;
+	inf.lpstrFile[0] = '\0';
+	inf.nMaxFile = sizeof(file);
+	inf.lpstrFilter = "All\0";
+	inf.nFilterIndex = 1;
+	inf.lpstrFileTitle = NULL;
+	inf.nMaxFileTitle = 0;
+	inf.lpstrInitialDir = NULL;
+	inf.Flags = OFN_PATHMUSTEXIST | OFN_FILEMUSTEXIST;
 
+	GetOpenFileNameA(&inf);
 }
 
 void StateMenu::action_exit() {
