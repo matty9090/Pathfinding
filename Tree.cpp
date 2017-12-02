@@ -93,7 +93,7 @@ std::list<Vec2<>> Tree::pathfind_bfs(Node start, Node goal) {
 
 		path.reverse();
 	} else
-		cout << "Could not find path :(" << endl;
+		cout << "Could not find path :(\n\n";
 
 	for (auto i = path.begin(); i != path.end(); ++i) {
 		std::cout << "(" << i->x << ", " << i->y << ")\n";
@@ -128,6 +128,8 @@ std::list<Vec2<>> Tree::pathfind_astar(Node start, Node goal) {
 		for (auto n : open)
 			if (f_score[n] < min_score)
 				min_score = f_score[n], current = n;
+
+		cout << current->pos.toString() << endl;
 
 		if (current == goal) {
 			goal_found = true;
@@ -174,12 +176,12 @@ std::list<Vec2<>> Tree::pathfind_astar(Node start, Node goal) {
 
 		path.reverse();
 	} else
-		cout << "Could not find path :(\n";
+		cout << "Could not find path :(\n\n";
 
 	return path;
 }
 
 // Manhattan Distance
 float Tree::heuristic(Node start, Node end) {
-	return (float)abs(start->pos.x - end->pos.x) + abs(start->pos.y + end->pos.y);
+	return (float)abs(start->pos.x - end->pos.x) + abs(start->pos.y - end->pos.y);
 }
