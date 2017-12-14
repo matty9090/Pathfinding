@@ -116,7 +116,7 @@ void StatePathfinder::displayPath(std::vector<Vec2<>> p, string id) {
 	if (!p.empty()) {
 		path.resize(++pathNum);
 		
-		int steps = 14;
+		int steps = 30;
 
 		for (int i = 0; i < p.size(); i++) {
 			Vec2<> p1 = (i > 0) ? p[i - 1] : p[0];
@@ -124,9 +124,9 @@ void StatePathfinder::displayPath(std::vector<Vec2<>> p, string id) {
 			Vec2<> p3 = (i < p.size() - 1) ? p[i + 1] : p.back();
 			Vec2<> p4 = (i < p.size() - 2) ? p[i + 2] : p.back();
 
-			for (int i = 0; i < steps; i++) {
-				float cx = bspline(p1.x, p2.x, p3.x, p4.x, (float)i / (float)steps);
-				float cy = bspline(p1.y, p2.y, p3.y, p4.y, (float)i / (float)steps);
+			for (int n = 0; n < steps; n++) {
+				float cx = bspline(p1.x, p2.x, p3.x, p4.x, (float)n / (float)steps);
+				float cy = bspline(p1.y, p2.y, p3.y, p4.y, (float)n / (float)steps);
 
 				path[pathNum - 1].push_back(meshes[id]->CreateModel(cx * scale + origin.x, origin.y + 5.0f + (pathNum), cy * scale + origin.z));
 				path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
