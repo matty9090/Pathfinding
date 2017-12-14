@@ -33,8 +33,8 @@ Tree::Node Tree::findNode(Vec2<> pos) {
 	return nullptr;
 }
 
-std::list<Vec2<>> Tree::pathfind_bfs(Node start, Node goal) {
-	list<Vec2<>> path;
+std::vector<Vec2<>> Tree::pathfind_bfs(Node start, Node goal) {
+	vector<Vec2<>> path;
 
 	std::vector<Node> open;
 	std::set<Node> closed;
@@ -91,15 +91,15 @@ std::list<Vec2<>> Tree::pathfind_bfs(Node start, Node goal) {
 		while (n = data[n])
 			path.push_back(n->pos);
 
-		path.reverse();
+		reverse(path.begin(), path.end());
 	} else
 		cout << "Could not find path :(\n\n";
 
 	return path;
 }
 
-std::list<Vec2<>> Tree::pathfind_astar(Node start, Node goal) {
-	std::list<Vec2<>> path;
+std::vector<Vec2<>> Tree::pathfind_astar(Node start, Node goal) {
+	std::vector<Vec2<>> path;
 	std::set<Node> open;
 	std::set<Node> closed;
 
@@ -168,7 +168,7 @@ std::list<Vec2<>> Tree::pathfind_astar(Node start, Node goal) {
 		while (n = data[n])
 			path.push_back(n->pos);
 
-		path.reverse();
+		reverse(path.begin(), path.end());
 	} else
 		cout << "Could not find path :(\n\n";
 

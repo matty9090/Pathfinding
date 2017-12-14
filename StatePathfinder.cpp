@@ -95,34 +95,43 @@ void StatePathfinder::free_memory() {
 	map.map.clear();
 }
 
+float StatePathfinder::cspline(float p1, float p2, float p3, float p4, float t) {
+	float a = -p1 + 3 * p2 - 3 * p3 + p4;
+	float b = 2 * p1 - 5 * p2 + 4 * p3 - p4;
+	float c = p3 - p1;
+	float d = 2 * p2;
+
+	return (a * t * t * t + b * t * t + c * t + d) / 2.0f;
+}
+
+float StatePathfinder::bspline(float p1, float p2, float p3, float p4, float t) {
+	return powf(1 - t, 3) * p1 + 3 * t * powf(1 - t, 2) * p2 + 3 * t * t * (1 - t) * p3 + t * t * t * p4;
+}
+
 float StatePathfinder::lerp(float v0, float v1, float t) {
 	return (1 - t) * v0 + t * v1;
 }
 
-void StatePathfinder::displayPath(std::list<Vec2<>> p, string id) {
+void StatePathfinder::displayPath(std::vector<Vec2<>> p, string id) {
 	if (!p.empty()) {
 		path.resize(++pathNum);
+		
+		int steps = 14;
 
-		Vec2<> prev = p.front();
-		int steps = 10;
-
-		for (auto coord : p) {
-			float px = prev.x * scale + origin.x;
-			float py = prev.y * scale + origin.z;
-
-			float x = coord.x * scale + origin.x;
-			float y = coord.y * scale + origin.z;
+		for (int i = 0; i < p.size(); i++) {
+			Vec2<> p1 = (i > 0) ? p[i - 1] : p[0];
+			Vec2<> p2 = p[i];
+			Vec2<> p3 = (i < p.size() - 1) ? p[i + 1] : p.back();
+			Vec2<> p4 = (i < p.size() - 2) ? p[i + 2] : p.back();
 
 			for (int i = 0; i < steps; i++) {
-				float cx = lerp(px, x, (float)i / (float)steps);
-				float cy = lerp(py, y, (float)i / (float)steps);
+				float cx = bspline(p1.x, p2.x, p3.x, p4.x, (float)i / (float)steps);
+				float cy = bspline(p1.y, p2.y, p3.y, p4.y, (float)i / (float)steps);
 
-				path[pathNum - 1].push_back(meshes[id]->CreateModel(cx, origin.y + 5.0f + (pathNum), cy));
+				path[pathNum - 1].push_back(meshes[id]->CreateModel(cx * scale + origin.x, origin.y + 5.0f + (pathNum), cy * scale + origin.z));
 				path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
 				path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
 			}
-
-			prev = coord;
 		}
 	}
 }

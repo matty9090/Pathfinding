@@ -12,7 +12,7 @@ App::App(Settings &s) : settings(s) {
 	eng->SetWindowCaption("Pathfinding");
 	eng->AddMediaFolder("./res");
 
-	state = State::Menu;
+	state = State::Pathfinder;
 
 	states.push_back(make_unique<StateMenu>(eng, settings));
 	states.push_back(make_unique<StatePathfinder>(eng, settings));
