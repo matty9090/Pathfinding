@@ -20,6 +20,14 @@
 			"map_file": "mMap.txt",
 			"map_width": 10,
 			"map_height": 10
+		},
+		
+		{
+			"name": "Map 3",
+			"coords_file": "cCoords.txt",
+			"map_file": "cMap.txt",
+			"map_width": 10,
+			"map_height": 10
 		}
 	],
 

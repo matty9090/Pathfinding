@@ -119,18 +119,37 @@ void StatePathfinder::displayPath(std::vector<Vec2<>> p, string id) {
 		int steps = 30;
 
 		for (int i = 0; i < p.size(); i++) {
-			Vec2<> p1 = (i > 0) ? p[i - 1] : p[0];
-			Vec2<> p2 = p[i];
-			Vec2<> p3 = (i < p.size() - 1) ? p[i + 1] : p.back();
-			Vec2<> p4 = (i < p.size() - 2) ? p[i + 2] : p.back();
+			Vec2<> ps = (i > 0) ? p[i - 1] : p.front();
+			Vec2<> pm = p[i];
+			Vec2<> pf = (i < p.size() - 1) ? p[i + 1] : p.back();
 
-			for (int n = 0; n < steps; n++) {
-				float cx = bspline(p1.x, p2.x, p3.x, p4.x, (float)n / (float)steps);
-				float cy = bspline(p1.y, p2.y, p3.y, p4.y, (float)n / (float)steps);
+			Vec2<float> dir_a = Vec2<float>(pm.x, pm.y) - Vec2<float>(ps.x, ps.y);
+			Vec2<float> dir_b = Vec2<float>(pf.x, pf.y) - Vec2<float>(pm.x, pm.y);
 
-				path[pathNum - 1].push_back(meshes[id]->CreateModel(cx * scale + origin.x, origin.y + 5.0f + (pathNum), cy * scale + origin.z));
-				path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
-				path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
+			// Corner ahead
+			if (ps.x != pf.x && ps.y != pf.y) {
+				Vec2<float> p1 = Vec2<float>(ps.x, ps.y) + dir_a / 2.0f;
+				Vec2<float> p2(pm.x, pm.y);
+				Vec2<float> p3 = p2 + dir_b / 2.0f;
+				Vec2<float> p4 = p3;
+
+				for (int n = 0; n < steps; n++) {
+					float cx = bspline(p1.x, p2.x, p3.x, p4.x, (float)n / (float)steps);
+					float cy = bspline(p1.y, p2.y, p3.y, p4.y, (float)n / (float)steps);
+
+					path[pathNum - 1].push_back(meshes[id]->CreateModel(cx * scale + origin.x, origin.y + 5.0f + (pathNum), cy * scale + origin.z));
+					path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
+					path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
+				}
+			} else {
+				for (int n = 0; n < steps; n++) {
+					float cx = lerp(pm.x - dir_a.x / 2.0f, pm.x + dir_b.x / 2.0f, (float)n / (float)steps);
+					float cy = lerp(pm.y - dir_a.y / 2.0f, pm.y + dir_b.y / 2.0f, (float)n / (float)steps);
+
+					path[pathNum - 1].push_back(meshes[id]->CreateModel(cx * scale + origin.x, origin.y + 5.0f + (pathNum), cy * scale + origin.z));
+					path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
+					path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
+				}
 			}
 		}
 	}
