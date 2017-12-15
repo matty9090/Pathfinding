@@ -61,6 +61,7 @@ class StatePathfinder : public State {
 		float bspline(float p1, float p2, float p3, float p4, float t);
 		float lerp(float v0, float v1, float t);
 
+		void clearPathSearch();
 		void displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed);
 		void displayPathBezier(std::vector<Vec2<>> path, std::string id);
 		void displayPathCatmullRom(std::vector<Vec2<>> path, std::string id);

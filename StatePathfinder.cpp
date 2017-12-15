@@ -51,7 +51,7 @@ int StatePathfinder::run() {
 
 			if (r == SearchAlgorithm::Found) {
 				found = true;
-				displayPathCatmullRom(searcher->getPath(), "Path_AS");
+				displayPathBezier(searcher->getPath(), "Path_AS");
 			} else
 				displayPathSearch(searcher->getOpenList(), searcher->getClosedList());
 		}
@@ -131,11 +131,15 @@ float StatePathfinder::lerp(float v0, float v1, float t) {
 	return (1 - t) * v0 + t * v1;
 }
 
-void StatePathfinder::displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed) {
+void StatePathfinder::clearPathSearch() {
 	for (auto &i : search_path)
 		i->GetMesh()->RemoveModel(i);
 
 	search_path.clear();
+}
+
+void StatePathfinder::displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed) {
+	clearPathSearch();
 	
 	for (auto &node : open) {
 		int x = node->pos.x, y = node->pos.y;
