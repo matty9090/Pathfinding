@@ -9,6 +9,7 @@
 #include "Settings.hpp"
 #include "State.hpp"
 #include "Tree.hpp"
+#include "AStar.hpp"
 
 class StatePathfinder : public State {
 	public:
@@ -24,6 +25,9 @@ class StatePathfinder : public State {
 	private:
 		Tree tree;
 		Tree::Node start, goal;
+
+		std::shared_ptr<SearchAlgorithm> searcher;
+
 		Vec2<size_t> dims;
 
 		int pathNum;

@@ -26,8 +26,13 @@ void StatePathfinder::init() {
 
 	map.constructMap(origin, scale);
 
+	searcher = make_shared<AStar>(tree);
+	searcher->start(start, goal);
+	
+	while (searcher->step() != SearchAlgorithm::Found) {}
+
 	displayPath(tree.pathfind_bfs(start, goal), "Path_BFS");
-	displayPath(tree.pathfind_astar(start, goal), "Path_AS");
+	displayPath(searcher->getPath(), "Path_AS");
 }
 
 int StatePathfinder::run() {

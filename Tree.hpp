@@ -44,13 +44,11 @@ class SearchAlgorithm {
 
 		virtual void start(Tree::Node start, Tree::Node goal) = 0;
 		virtual int step() = 0;
-
-		Tree &getTree() { return tree; }
-
-	private:
-		Tree &tree;
+		
+		std::vector<Vec2<>> getPath() { return path; };
 
 	protected:
+		Tree &tree;
 		Tree::Node startn, goaln;
 
 		std::vector<Vec2<>> path;

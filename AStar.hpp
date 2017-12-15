@@ -13,6 +13,9 @@ class AStar : public SearchAlgorithm {
 		std::map<Tree::Node, Tree::Node> data;
 		std::map<Tree::Node, float> g_score;
 		std::map<Tree::Node, float> f_score;
+		
+		bool goal_found;
 
+		void construct_path();
 		float heuristic(Tree::Node start, Tree::Node end);
 };
