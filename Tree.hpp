@@ -45,6 +45,8 @@ class SearchAlgorithm {
 		virtual void start(Tree::Node start, Tree::Node goal) = 0;
 		virtual int step() = 0;
 		
+		std::set<Tree::Node> getOpenList() { return open; };
+		std::set<Tree::Node> getClosedList() { return closed; };
 		std::vector<Vec2<>> getPath() { return path; };
 
 	protected:

@@ -85,6 +85,20 @@
 			"file": "Cube.x",
 			"tex": "blue.jpg",
 			"scale": 0.12
+		},
+		
+		{
+			"name": "OpenList",
+			"file": "Cube.x",
+			"tex": "red.jpg",
+			"scale": 0.4
+		},
+		
+		{
+			"name": "ClosedList",
+			"file": "Cube.x",
+			"tex": "green.jpg",
+			"scale": 0.4
 		}
 	]
 }

@@ -16,6 +16,8 @@ StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings)
 
 void StatePathfinder::init() {
 	pathNum = 0;
+	timer = 0.1f;
+	found = false;
 	cam = engine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
 
 	load_maps();
@@ -28,8 +30,6 @@ void StatePathfinder::init() {
 
 	searcher = make_shared<AStar>(tree);
 	searcher->start(start, goal);
-	
-	while (searcher->step() != SearchAlgorithm::Found) {}
 
 	displayPath(tree.pathfind_bfs(start, goal), "Path_BFS");
 	displayPath(searcher->getPath(), "Path_AS");
@@ -40,6 +40,20 @@ int StatePathfinder::run() {
 		if (engine->KeyHit(Key_Escape)) {
 			engine->Stop();
 			break;
+		}
+
+		timer -= engine->Timer();
+
+		if (!found && timer < 0.0f) {
+			timer = 0.1f;
+
+			int r = searcher->step();
+
+			if (r == SearchAlgorithm::Found) {
+				found = true;
+				displayPath(searcher->getPath(), "Path_AS");
+			} else
+				displayPathSearch(searcher->getOpenList(), searcher->getClosedList());
 		}
 
 		engine->DrawScene();
@@ -115,6 +129,29 @@ float StatePathfinder::bspline(float p1, float p2, float p3, float p4, float t) 
 
 float StatePathfinder::lerp(float v0, float v1, float t) {
 	return (1 - t) * v0 + t * v1;
+}
+
+void StatePathfinder::displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed) {
+	for (auto &i : search_path)
+		i->GetMesh()->RemoveModel(i);
+
+	search_path.clear();
+	
+	for (auto &node : open) {
+		int x = node->pos.x, y = node->pos.y;
+
+		search_path.push_back(meshes["OpenList"]->CreateModel(x * scale + origin.x, origin.y + 5.0f, y * scale + origin.z));
+		search_path.back()->SetSkin(settings.getModels()["OpenList"].tex);
+		search_path.back()->Scale(settings.getModels()["OpenList"].scale);
+	}
+
+	for (auto &node : closed) {
+		int x = node->pos.x, y = node->pos.y;
+
+		search_path.push_back(meshes["ClosedList"]->CreateModel(x * scale + origin.x, origin.y + 5.0f, y * scale + origin.z));
+		search_path.back()->SetSkin(settings.getModels()["ClosedList"].tex);
+		search_path.back()->Scale(settings.getModels()["ClosedList"].scale);
+	}
 }
 
 void StatePathfinder::displayPath(std::vector<Vec2<>> p, string id) {

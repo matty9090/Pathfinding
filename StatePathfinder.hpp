@@ -30,11 +30,14 @@ class StatePathfinder : public State {
 
 		Vec2<size_t> dims;
 
+		bool found;
 		int pathNum;
-		float scale;
+		float scale, timer;
 		Vec3<> origin;
 
 		tle::ICamera *cam;
+
+		std::vector<tle::IModel*> search_path;
 		std::vector<std::vector<tle::IModel*>> path;
 
 		std::map<std::string, tle::IMesh*> meshes;
@@ -56,5 +59,7 @@ class StatePathfinder : public State {
 		float cspline(float p1, float p2, float p3, float p4, float t);
 		float bspline(float p1, float p2, float p3, float p4, float t);
 		float lerp(float v0, float v1, float t);
+
+		void displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed);
 		void displayPath(std::vector<Vec2<>> path, std::string id);
 };
