@@ -3,6 +3,8 @@
 #include <memory>
 #include <vector>
 #include <list>
+#include <set>
+#include <map>
 
 #include "Vec3.hpp"
 
@@ -32,4 +34,26 @@ class Tree {
 		std::vector<std::vector<Node>> &grid;
 
 		size_t w, h;
+};
+
+class SearchAlgorithm {
+	public:
+		enum Status { Found, Searching, Failed };
+
+		SearchAlgorithm(Tree &t) : tree(t) {}
+
+		virtual void start(Tree::Node start, Tree::Node goal) = 0;
+		virtual int step() = 0;
+
+		Tree &getTree() { return tree; }
+
+	private:
+		Tree &tree;
+
+	protected:
+		Tree::Node startn, goaln;
+
+		std::vector<Vec2<>> path;
+		std::set<Tree::Node> open;
+		std::set<Tree::Node> closed;
 };
