@@ -9,6 +9,7 @@
 #include "Settings.hpp"
 #include "State.hpp"
 #include "Tree.hpp"
+#include "BFS.hpp"
 #include "AStar.hpp"
 
 class StatePathfinder : public State {

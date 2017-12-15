@@ -128,6 +128,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Assignment.cpp" />
     <ClCompile Include="AStar.cpp" />
+    <ClCompile Include="BFS.cpp" />
     <ClCompile Include="MapLoader.cpp" />
     <ClCompile Include="Settings.cpp" />
     <ClCompile Include="StateMenu.cpp" />
@@ -140,6 +141,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
   <ItemGroup>
     <ClInclude Include="App.hpp" />
     <ClInclude Include="AStar.hpp" />
+    <ClInclude Include="BFS.hpp" />
     <ClInclude Include="JSON.hpp" />
     <ClInclude Include="MapLoader.hpp" />
     <ClInclude Include="Settings.hpp" />

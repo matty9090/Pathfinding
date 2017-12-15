@@ -16,7 +16,7 @@ StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings)
 
 void StatePathfinder::init() {
 	pathNum = 0;
-	timer = 0.1f;
+	timer = 1.f;
 	found = false;
 	cam = engine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
 
@@ -28,11 +28,11 @@ void StatePathfinder::init() {
 
 	map.constructMap(origin, scale);
 
-	searcher = make_shared<AStar>(tree);
+	searcher = make_shared<BFS>(tree);
 	searcher->start(start, goal);
 
-	displayPath(tree.pathfind_bfs(start, goal), "Path_BFS");
-	displayPath(searcher->getPath(), "Path_AS");
+	//displayPath(tree.pathfind_bfs(start, goal), "Path_BFS");
+	//displayPath(searcher->getPath(), "Path_AS");
 }
 
 int StatePathfinder::run() {

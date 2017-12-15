@@ -28,6 +28,14 @@
 			"map_file": "cMap.txt",
 			"map_width": 10,
 			"map_height": 10
+		},
+		
+		{
+			"name": "Map 4",
+			"coords_file": "zCoords.txt",
+			"map_file": "zMap.txt",
+			"map_width": 10,
+			"map_height": 10
 		}
 	],
 

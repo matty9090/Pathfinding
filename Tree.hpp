@@ -26,7 +26,6 @@ class Tree {
 		Node findNode(Vec2<> pos);
 
 		std::vector<Vec2<>> pathfind_bfs(Node start, Node goal);
-		std::vector<Vec2<>> pathfind_astar(Node start, Node goal);
 
 		float heuristic(Node start, Node end);
 
