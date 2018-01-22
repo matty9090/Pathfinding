@@ -25,9 +25,7 @@ class Tree {
 		Node getNode(unsigned x, unsigned y);
 		Node findNode(Vec2<> pos);
 
-		std::vector<Vec2<>> pathfind_bfs(Node start, Node goal);
-
-		float heuristic(Node start, Node end);
+		Vec2<size_t> getGridSize() { return Vec2<size_t>(w, h); }
 
 	private:
 		std::vector<std::vector<Node>> &grid;
@@ -39,7 +37,7 @@ class SearchAlgorithm {
 	public:
 		enum Status { Found, Searching, Failed };
 
-		SearchAlgorithm(Tree &t) : tree(t) {}
+		SearchAlgorithm(Tree &t, bool diag = false) : tree(t), useDiag(diag) {}
 
 		virtual void start(Tree::Node start, Tree::Node goal) = 0;
 		virtual int step() = 0;
@@ -55,4 +53,8 @@ class SearchAlgorithm {
 		std::vector<Vec2<>> path;
 		std::set<Tree::Node> open;
 		std::set<Tree::Node> closed;
+
+		bool useDiag;
+
+		float heuristic(Tree::Node start, Tree::Node end);
 };

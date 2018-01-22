@@ -14,7 +14,7 @@ Settings::Settings(string file) {
 
 	f.close();
 
-	current_map = "Map 3";
+	current_map = "Map 2";
 }
 
 void Settings::load_properties() {

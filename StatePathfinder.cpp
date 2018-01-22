@@ -16,7 +16,7 @@ StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings)
 
 void StatePathfinder::init() {
 	pathNum = 0;
-	timer = 1.f;
+	timer = 0.f;
 	found = false;
 	cam = engine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
 

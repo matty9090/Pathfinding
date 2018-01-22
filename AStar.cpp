@@ -12,6 +12,13 @@ void AStar::start(Tree::Node _start, Tree::Node _goal) {
 	startn = _start;
 	goaln = _goal;
 
+	for (int y = 0; y < tree.getGridSize().y; y++) {
+		for (int x = 0; x < tree.getGridSize().x; x++) {
+			g_score[tree.getNode(x, y)] = 10000.f;
+			f_score[tree.getNode(x, y)] = 10000.f;
+		}
+	}
+
 	g_score[startn] = 0.f;
 	f_score[startn] = heuristic(startn, goaln);
 
@@ -48,10 +55,12 @@ int AStar::step() {
 		next.push_back(tree.findNode(Vec2<>(current->pos.x, current->pos.y + 1)));
 		next.push_back(tree.findNode(Vec2<>(current->pos.x, current->pos.y - 1)));
 		
-		/*next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y + 1)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y - 1)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y + 1)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y - 1)));*/
+		if (useDiag) {
+			next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y + 1)));
+			next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y - 1)));
+			next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y + 1)));
+			next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y - 1)));
+		}
 
 		for (auto node : next) {
 			if (node == nullptr || node->cost <= 0 || closed.find(node) != closed.end())
@@ -61,9 +70,6 @@ int AStar::step() {
 				open.insert(node);
 
 			float n_score = g_score[current] + (float)current->cost;
-
-			if (g_score.find(node) == g_score.end())
-				g_score[node] = 10000.f;
 
 			if (n_score >= g_score[node])
 				continue;
