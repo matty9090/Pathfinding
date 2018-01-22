@@ -40,6 +40,13 @@ int BFS::step() {
 		next.push_back(tree.findNode(Vec2<>(current->pos.x, current->pos.y + 1)));
 		next.push_back(tree.findNode(Vec2<>(current->pos.x, current->pos.y - 1)));
 
+		if (useDiag) {
+			next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y + 1)));
+			next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y - 1)));
+			next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y + 1)));
+			next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y - 1)));
+		}
+
 		for (auto node : next) {
 			if (node == nullptr || node->cost <= 0 || closed.find(node) != closed.end())
 				continue;
