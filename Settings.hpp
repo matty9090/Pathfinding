@@ -2,6 +2,7 @@
 
 #include <string>
 #include <map>
+#include <TL-Engine.h>
 
 #include "JSON.hpp"
 #include "Vec3.hpp"
@@ -27,8 +28,16 @@ class Settings {
 			Vec2<size_t> dims;
 		};
 
+		struct KeyDesc {
+			std::string desc;
+			tle::EKeyCode code;
+		};
+
 		std::map<std::string, Model> &getModels() { return models; }
 		std::map<std::string, Map> &getMaps() { return maps; }
+		std::map<std::string, KeyDesc> &getKeys() { return keys; }
+		tle::EKeyCode getKeyCode(std::string txt) { return keys[txt].code; }
+
 		Map &currentMap() { return maps[current_map]; }
 
 	private:
@@ -40,8 +49,10 @@ class Settings {
 		
 		std::map<std::string, Model> models;
 		std::map<std::string, Map> maps;
+		std::map<std::string, KeyDesc> keys;
 
 		void load_properties();
 		void load_models();
 		void load_maps();
+		void load_keys();
 };

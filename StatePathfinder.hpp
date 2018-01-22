@@ -26,9 +26,6 @@ class StatePathfinder : public State {
 	private:
 		Tree tree;
 		Tree::Node start, goal;
-
-		std::shared_ptr<SearchAlgorithm> searcher;
-
 		Vec2<size_t> dims;
 
 		bool found;
@@ -36,8 +33,14 @@ class StatePathfinder : public State {
 		float scale, timer;
 		Vec3<> origin;
 
-		tle::ICamera *cam;
+		enum Algorithms { AlgBfs, ALGAStar };
+		int alg;
 
+		tle::ICamera *cam;
+		tle::IFont *font;
+		std::string key_list;
+
+		std::shared_ptr<SearchAlgorithm> searcher;
 		std::vector<tle::IModel*> search_path;
 		std::vector<std::vector<tle::IModel*>> path;
 
@@ -61,6 +64,8 @@ class StatePathfinder : public State {
 		float bspline(float p1, float p2, float p3, float p4, float t);
 		float lerp(float v0, float v1, float t);
 
+		void handleInput();
+		void displayGUI();
 		void clearPathSearch();
 		void displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed);
 		void displayPathBezier(std::vector<Vec2<>> path, std::string id);

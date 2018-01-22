@@ -17,30 +17,32 @@ StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings)
 void StatePathfinder::init() {
 	pathNum = 0;
 	timer = 0.f;
-	found = false;
+	found = true;
+
+	for (auto key : settings.getKeys())
+		key_list += key.second.desc + "  /  ";
+
+	key_list = key_list.substr(0, key_list.length() - 5);
+
 	cam = engine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
+	font = engine->LoadFont("res/Arial.ttf", 24U);
 
 	load_maps();
 	load_models();
 
 	scale = settings.getMapScale();
 	origin = Vec3<>(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, 10.0f);
+	alg = ALGAStar;
 
 	map.constructMap(origin, scale);
-
-	searcher = make_shared<AStar>(tree);
-	searcher->start(start, goal);
-
-	//displayPath(tree.pathfind_bfs(start, goal), "Path_BFS");
-	//displayPath(searcher->getPath(), "Path_AS");
 }
 
 int StatePathfinder::run() {
 	while (engine->IsRunning()) {
-		if (engine->KeyHit(Key_Escape)) {
-			engine->Stop();
-			break;
-		}
+		handleInput();
+
+		if (engine->KeyHit(settings.getKeyCode("Main Menu")))
+			return State::Menu;
 
 		timer -= engine->Timer();
 
@@ -56,6 +58,7 @@ int StatePathfinder::run() {
 				displayPathSearch(searcher->getOpenList(), searcher->getClosedList());
 		}
 
+		displayGUI();
 		engine->DrawScene();
 	}
 
@@ -129,6 +132,47 @@ float StatePathfinder::bspline(float p1, float p2, float p3, float p4, float t) 
 
 float StatePathfinder::lerp(float v0, float v1, float t) {
 	return (1 - t) * v0 + t * v1;
+}
+
+void StatePathfinder::handleInput() {
+	if (engine->KeyHit(Key_Escape))
+		engine->Stop();
+
+	if (engine->KeyHit(settings.getKeyCode("Start"))) {
+		found = false;
+		pathNum = 0;
+		timer = 0.0f;
+
+		searcher = make_shared<AStar>(tree);
+
+		if(alg == AlgBfs)
+			searcher = make_shared<BFS>(tree);
+
+		searcher->start(start, goal);
+	}
+
+	if (found && engine->KeyHit(settings.getKeyCode("Clear"))) {
+		clearPathSearch();
+
+		for (int i = 0; i < path.size(); i++) {
+			for (auto &node : path[i])
+				node->GetMesh()->RemoveModel(node);
+
+			path[i].clear();
+		}
+
+		path.clear();
+	}
+
+	if (engine->KeyHit(settings.getKeyCode("Switch Algorithm")))
+		alg = (alg + 1) % 2;
+}
+
+void StatePathfinder::displayGUI() {
+	string alg_str = (alg == AlgBfs) ? "Breadth-First" : "A*";
+
+	font->Draw(key_list, 10, 10, kWhite);
+	font->Draw("Algorithm: " + alg_str, 10, 30, kWhite);
 }
 
 void StatePathfinder::clearPathSearch() {

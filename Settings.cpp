@@ -11,6 +11,7 @@ Settings::Settings(string file) {
 	load_properties();
 	load_models();
 	load_maps();
+	load_keys();
 
 	f.close();
 
@@ -90,4 +91,18 @@ void Settings::load_maps() {
 	}
 
 	cout << "\n";
+}
+
+void Settings::load_keys() {
+	picojson::array keys_list = json.get("keys").get<picojson::array>();
+	
+	for (auto key : keys_list) {
+		string use = key.get("use").get<string>();
+		string txt = key.get("txt").get<string>();
+		tle::EKeyCode code = (tle::EKeyCode)((int)key.get("code").get<double>());
+
+		string desc = use + ": " + txt;
+
+		keys[use] = { desc, code };
+	}
 }
