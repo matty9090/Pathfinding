@@ -11,6 +11,7 @@ class Settings {
 	public:
 		Settings(std::string file);
 
+		void setMap(std::string map_id) { current_map = map_id; }
 		size_t getScreenW() { return window_w; }
 		size_t getScreenH() { return window_h; }
 		float getMapScale() { return map_scale; }

@@ -1,6 +1,7 @@
 #include "App.hpp"
 
 #include "StateMenu.hpp"
+#include "StateMapChooser.hpp"
 #include "StatePathfinder.hpp"
 
 using namespace tle;
@@ -12,9 +13,10 @@ App::App(Settings &s) : settings(s) {
 	eng->SetWindowCaption("Pathfinding");
 	eng->AddMediaFolder("./res");
 
-	state = State::Pathfinder;
+	state = State::Menu;
 
 	states.push_back(make_unique<StateMenu>(eng, settings));
+	states.push_back(make_unique<StateMapChooser>(eng, settings));
 	states.push_back(make_unique<StatePathfinder>(eng, settings));
 }
 

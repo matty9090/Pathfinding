@@ -41,8 +41,10 @@ int StatePathfinder::run() {
 	while (engine->IsRunning()) {
 		handleInput();
 
-		if (engine->KeyHit(settings.getKeyCode("Main Menu")))
+		if (engine->KeyHit(settings.getKeyCode("Main Menu"))) {
+			cleanup();
 			return State::Menu;
+		}
 
 		timer -= engine->Timer();
 
@@ -61,6 +63,8 @@ int StatePathfinder::run() {
 		displayGUI();
 		engine->DrawScene();
 	}
+
+	cleanup();
 
 	return State::Exit;
 }
@@ -153,15 +157,7 @@ void StatePathfinder::handleInput() {
 
 	if (found && engine->KeyHit(settings.getKeyCode("Clear"))) {
 		clearPathSearch();
-
-		for (int i = 0; i < path.size(); i++) {
-			for (auto &node : path[i])
-				node->GetMesh()->RemoveModel(node);
-
-			path[i].clear();
-		}
-
-		path.clear();
+		clearPathLine();
 	}
 
 	if (engine->KeyHit(settings.getKeyCode("Switch Algorithm")))
@@ -180,6 +176,17 @@ void StatePathfinder::clearPathSearch() {
 		i->GetMesh()->RemoveModel(i);
 
 	search_path.clear();
+}
+
+void StatePathfinder::clearPathLine() {
+	for (int i = 0; i < path.size(); i++) {
+		for (auto &node : path[i])
+			node->GetMesh()->RemoveModel(node);
+
+		path[i].clear();
+	}
+
+	path.clear();
 }
 
 void StatePathfinder::displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed) {
@@ -267,6 +274,17 @@ void StatePathfinder::displayPathCatmullRom(std::vector<Vec2<>> p, string id) {
 			}
 		}
 	}
+}
+
+void StatePathfinder::cleanup() {
+	clearPathSearch();
+	clearPathLine();
+
+	for (auto mesh : meshes)
+		engine->RemoveMesh(mesh.second);
+
+	key_list = "";
+	engine->RemoveFont(font);
 }
 
 void StatePathfinder::NodeMap::constructMap(Vec3<> origin, float scale) {

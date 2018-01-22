@@ -1,18 +1,23 @@
-#include "StateMenu.hpp"
+#include "StateMapChooser.hpp"
+#include "MapLoader.hpp"
 
 using namespace tle;
 
-StateMenu::StateMenu(tle::I3DEngine *engine, Settings &settings) : State(engine, settings) {
+StateMapChooser::StateMapChooser(tle::I3DEngine *engine, Settings &settings) : State(engine, settings) {
 	
 }
 
-void StateMenu::init() {
+void StateMapChooser::init() {
 	font		= engine->LoadFont("res/HoboStd.otf", 46U);
 	spr_logo	= engine->CreateSprite("res/logo.png", 314.0f, 76.0f);
 	spr_bg		= engine->CreateSprite("res/bg.jpg");
 
-	items[0] = { "Choose map", &StateMenu::action_select };
-	items[1] = { "Exit", &StateMenu::action_exit };
+	int count = 0;
+
+	for (auto map : settings.getMaps()) {
+		items[count] = { "Map " + to_string(count + 1), count };
+		++count;
+	}
 
 	selected = 0;
 	
@@ -27,7 +32,7 @@ void StateMenu::init() {
 	return_state = State::Exit;
 }
 
-int StateMenu::run() {
+int StateMapChooser::run() {
 	while (engine->IsRunning() && !state_change) {
 		if (engine->KeyHit(Key_Escape)) {
 			engine->Stop();
@@ -36,7 +41,12 @@ int StateMenu::run() {
 
 		if (engine->KeyHit(Key_Down)) selected = (selected + 1) % items.size();
 		if (engine->KeyHit(Key_Up)) selected = (selected - 1) % items.size();
-		if (engine->KeyHit(Key_Return)) ((*this).*items[selected].action)();
+
+		if (engine->KeyHit(Key_Return)) {
+			settings.setMap(items[selected].txt);
+			return_state = State::Pathfinder;
+			state_change = true;
+		}
 
 		for (auto &item : items)
 			font->Draw(item.second.txt, item.second.pos.x, item.second.pos.y, (item.first == selected) ? kBlue : kBlack, kCentre, kVCentre);
@@ -49,14 +59,4 @@ int StateMenu::run() {
 	engine->RemoveSprite(spr_bg);
 
 	return return_state;
-}
-
-void StateMenu::action_select() {
-	state_change = true;
-	return_state = State::MapChooser;
-}
-
-void StateMenu::action_exit() {
-	state_change = true;
-	return_state = State::Exit;
 }

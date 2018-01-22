@@ -131,6 +131,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
     <ClCompile Include="BFS.cpp" />
     <ClCompile Include="MapLoader.cpp" />
     <ClCompile Include="Settings.cpp" />
+    <ClCompile Include="StateMapChooser.cpp" />
     <ClCompile Include="StateMenu.cpp" />
     <ClCompile Include="StatePathfinder.cpp" />
     <ClCompile Include="Tree.cpp" />
@@ -146,6 +147,7 @@ copy "C:\ProgramData\TL-Engine\3rd Party\TL-Xtreme\shader\*.*" "$(OutDir)" &gt; 
     <ClInclude Include="MapLoader.hpp" />
     <ClInclude Include="Settings.hpp" />
     <ClInclude Include="State.hpp" />
+    <ClInclude Include="StateMapChooser.hpp" />
     <ClInclude Include="StateMenu.hpp" />
     <ClInclude Include="StatePathfinder.hpp" />
     <ClInclude Include="Tree.hpp" />

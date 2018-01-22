@@ -11,7 +11,7 @@ class State {
 		virtual void init() = 0;
 		virtual int run() = 0;
 
-		enum States { Menu, Pathfinder, Exit };
+		enum States { Menu, MapChooser, Pathfinder, Exit };
 
 	protected:
 		Settings &settings;
