@@ -10,7 +10,8 @@
 		{ "use": "Clear",				"txt": "F2", "code": 113 },
 		{ "use": "Switch Algorithm",	"txt": "F3", "code": 114 },
 		{ "use": "Main Menu",			"txt": "B",  "code": 66 },
-		{ "use": "Diagonals",			"txt": "D",  "code": 68 }
+		{ "use": "Diagonals",			"txt": "D",  "code": 68 },
+		{ "use": "Curve Type",			"txt": "C",  "code": 67 }
 	],
 	
 	"maps": [

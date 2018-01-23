@@ -28,19 +28,19 @@ class StatePathfinder : public State {
 		Tree::Node start, goal;
 		Vec2<size_t> dims;
 
-		bool found, useDiag;
+		bool a_found, b_found, useDiag, bezier;
 		int pathNum;
 		float scale, timer;
 		Vec3<> origin;
 
-		enum Algorithms { AlgBfs, ALGAStar };
+		enum Algorithms { AlgBfs, AlgAStar, AlgBoth };
 		int alg;
 
 		tle::ICamera *cam;
 		tle::IFont *font;
 		std::string key_list;
 
-		std::shared_ptr<SearchAlgorithm> searcher;
+		std::shared_ptr<SearchAlgorithm> a_searcher, b_searcher;
 		std::vector<tle::IModel*> search_path;
 		std::vector<std::vector<tle::IModel*>> path;
 

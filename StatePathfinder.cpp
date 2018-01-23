@@ -16,9 +16,10 @@ StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings)
 
 void StatePathfinder::init() {
 	pathNum = 0;
-	timer = 0.f;
-	found = true;
+	timer   = 0.f;
+	bezier  = true;
 	useDiag = false;
+	a_found = true, b_found = true;
 
 	for (auto key : settings.getKeys())
 		key_list += key.second.desc + "  /  ";
@@ -33,7 +34,7 @@ void StatePathfinder::init() {
 
 	scale = settings.getMapScale();
 	origin = Vec3<>(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, 10.0f);
-	alg = ALGAStar;
+	alg = AlgAStar;
 
 	map.constructMap(origin, scale);
 }
@@ -49,16 +50,39 @@ int StatePathfinder::run() {
 
 		timer -= engine->Timer();
 
-		if (!found && timer < 0.0f) {
-			timer = 0.1f;
+		if (timer < 0.0f) {
+			timer = 0.07f;
 
-			int r = searcher->step();
+			if (!a_found) {
+				int r = a_searcher->step();
 
-			if (r == SearchAlgorithm::Found) {
-				found = true;
-				displayPathBezier(searcher->getPath(), "Path_AS");
-			} else
-				displayPathSearch(searcher->getOpenList(), searcher->getClosedList());
+				if (r == SearchAlgorithm::Found) {
+					a_found = true;
+
+					if (bezier)
+						displayPathBezier(a_searcher->getPath(), "Path_AS");
+					else
+						displayPathCatmullRom(a_searcher->getPath(), "Path_AS");
+
+				}
+				else
+					displayPathSearch(a_searcher->getOpenList(), a_searcher->getClosedList());
+			}
+
+			if (!b_found) {
+				int r = b_searcher->step();
+
+				if (r == SearchAlgorithm::Found) {
+					b_found = true;
+
+					if (bezier)
+						displayPathBezier(b_searcher->getPath(), "Path_BFS");
+					else
+						displayPathCatmullRom(b_searcher->getPath(), "Path_BFS");
+				}
+				else
+					displayPathSearch(b_searcher->getOpenList(), b_searcher->getClosedList());
+			}
 		}
 
 		displayGUI();
@@ -147,37 +171,46 @@ void StatePathfinder::handleInput() {
 		clearPathSearch();
 		clearPathLine();
 
-		found = false;
+		a_found = true, b_found = true;
 		pathNum = 0;
 		timer = 0.0f;
 
-		searcher = make_shared<AStar>(tree);
+		if (alg == AlgAStar) a_found = false;
+		if (alg == AlgBfs)   b_found = false;
+		if (alg == AlgBoth)  a_found = false, b_found = false;
 
-		if(alg == AlgBfs)
-			searcher = make_shared<BFS>(tree);
+		a_searcher = make_shared<AStar>(tree);
+		b_searcher = make_shared<BFS>(tree);
 
-		searcher->useDiagonals(useDiag);
-		searcher->start(start, goal);
+		a_searcher->useDiagonals(useDiag);
+		a_searcher->start(start, goal);
+
+		b_searcher->useDiagonals(useDiag);
+		b_searcher->start(start, goal);
 	}
 
-	if (found && engine->KeyHit(settings.getKeyCode("Clear"))) {
+	if (a_found && b_found && engine->KeyHit(settings.getKeyCode("Clear"))) {
 		clearPathSearch();
 		clearPathLine();
 	}
 
 	if (engine->KeyHit(settings.getKeyCode("Switch Algorithm")))
-		alg = (alg + 1) % 2;
+		alg = (alg + 1) % 3;
 
 	if (engine->KeyHit(settings.getKeyCode("Diagonals")))
 		useDiag = !useDiag;
+
+	if (engine->KeyHit(settings.getKeyCode("Curve Type")))
+		bezier = !bezier;
 }
 
 void StatePathfinder::displayGUI() {
-	string alg_str = (alg == AlgBfs) ? "Breadth-First" : "A*";
+	string alg_str = (alg == AlgBfs) ? "Breadth-First" : ((alg == AlgAStar) ? "A*" : "BFS + A*");
 	string diag_str = (useDiag ? "On" : "Off");
+	string curv_str = (bezier ? "Bezier" : "Catmul-Rom");
 
 	font->Draw(key_list, 10, 10, kWhite);
-	font->Draw("Diagonals: " + diag_str + "  /  " + "Algorithm: " + alg_str, 10, 34, kLightGrey);
+	font->Draw("Diagonals: " + diag_str + "  /  " + "Curve: " + curv_str + "  /  " + "Algorithm: " + alg_str, 10, 34, kLightGrey);
 }
 
 void StatePathfinder::clearPathSearch() {
