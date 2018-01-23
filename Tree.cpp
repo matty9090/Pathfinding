@@ -35,5 +35,5 @@ Tree::Node Tree::findNode(Vec2<> pos) {
 
 // Manhattan Distance
 int SearchAlgorithm::heuristic(Tree::Node start, Tree::Node end) {
-	return (float)abs(start->pos.x - end->pos.x) + (float)abs(start->pos.y - end->pos.y);
+	return abs(start->pos.x - end->pos.x) + abs(start->pos.y - end->pos.y);
 }

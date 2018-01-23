@@ -12,7 +12,6 @@ class BFS : public SearchAlgorithm {
 	private:
 		std::map<Tree::Node, Tree::Node> data;
 
-		bool useDiag;
 		bool goal_found;
 
 		void construct_path();

@@ -12,8 +12,8 @@ void AStar::start(Tree::Node _start, Tree::Node _goal) {
 	startn = _start;
 	goaln = _goal;
 
-	for (int y = 0; y < tree.getGridSize().y; y++) {
-		for (int x = 0; x < tree.getGridSize().x; x++) {
+	for (unsigned y = 0; y < tree.getGridSize().y; y++) {
+		for (unsigned x = 0; x < tree.getGridSize().x; x++) {
 			tree.getNode(x, y)->score = 10000;
 			tree.getNode(x, y)->estimate = 10000;
 		}
