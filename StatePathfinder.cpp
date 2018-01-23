@@ -2,6 +2,7 @@
 #include "MapLoader.hpp"
 
 #include <cassert>
+#include <fstream>
 
 using namespace tle;
 
@@ -64,9 +65,10 @@ int StatePathfinder::run() {
 					else
 						displayPathCatmullRom(a_searcher->getPath(), "Path_AS");
 
-				}
-				else
-					displayPathSearch(a_searcher->getOpenList(), a_searcher->getClosedList());
+					writeResults(a_searcher->getPath(), "AS");
+
+				} else
+					displayPathSearch(a_searcher->getOpenList(), a_searcher->getClosedList(), "_AS");
 			}
 
 			if (!b_found) {
@@ -79,9 +81,10 @@ int StatePathfinder::run() {
 						displayPathBezier(b_searcher->getPath(), "Path_BFS");
 					else
 						displayPathCatmullRom(b_searcher->getPath(), "Path_BFS");
-				}
-				else
-					displayPathSearch(b_searcher->getOpenList(), b_searcher->getClosedList());
+
+					writeResults(b_searcher->getPath(), "BFS");
+				} else
+					displayPathSearch(b_searcher->getOpenList(), b_searcher->getClosedList(), "_BFS");
 			}
 		}
 
@@ -231,23 +234,31 @@ void StatePathfinder::clearPathLine() {
 	path.clear();
 }
 
-void StatePathfinder::displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed) {
-	clearPathSearch();
-	
+void StatePathfinder::writeResults(std::vector<Vec2<>> path, string ext) {
+	string map_file = settings.currentMap().map_file;
+	ofstream file("Results_" + map_file.substr(0, map_file.find_last_of('.')) + "_" + ext + ".txt");
+
+	for (auto coord : path)
+		file << coord.toString() << endl;
+
+	file.close();
+}
+
+void StatePathfinder::displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed, string id) {
 	for (auto &node : open) {
 		int x = node->pos.x, y = node->pos.y;
 
-		search_path.push_back(meshes["OpenList"]->CreateModel(x * scale + origin.x, origin.y + 5.0f, y * scale + origin.z));
-		search_path.back()->SetSkin(settings.getModels()["OpenList"].tex);
-		search_path.back()->Scale(settings.getModels()["OpenList"].scale);
+		search_path.push_back(meshes["OpenList" + id]->CreateModel(x * scale + origin.x, origin.y + 5.0f, y * scale + origin.z));
+		search_path.back()->SetSkin(settings.getModels()["OpenList" + id].tex);
+		search_path.back()->Scale(settings.getModels()["OpenList" + id].scale);
 	}
 
 	for (auto &node : closed) {
 		int x = node->pos.x, y = node->pos.y;
 
-		search_path.push_back(meshes["ClosedList"]->CreateModel(x * scale + origin.x, origin.y + 5.0f, y * scale + origin.z));
-		search_path.back()->SetSkin(settings.getModels()["ClosedList"].tex);
-		search_path.back()->Scale(settings.getModels()["ClosedList"].scale);
+		search_path.push_back(meshes["ClosedList" + id]->CreateModel(x * scale + origin.x, origin.y + 5.0f, y * scale + origin.z));
+		search_path.back()->SetSkin(settings.getModels()["ClosedList" + id].tex);
+		search_path.back()->Scale(settings.getModels()["ClosedList" + id].scale);
 	}
 }
 
