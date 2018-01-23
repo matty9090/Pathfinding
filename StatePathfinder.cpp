@@ -18,6 +18,7 @@ void StatePathfinder::init() {
 	pathNum = 0;
 	timer = 0.f;
 	found = true;
+	useDiag = false;
 
 	for (auto key : settings.getKeys())
 		key_list += key.second.desc + "  /  ";
@@ -143,6 +144,9 @@ void StatePathfinder::handleInput() {
 		engine->Stop();
 
 	if (engine->KeyHit(settings.getKeyCode("Start"))) {
+		clearPathSearch();
+		clearPathLine();
+
 		found = false;
 		pathNum = 0;
 		timer = 0.0f;
@@ -152,6 +156,7 @@ void StatePathfinder::handleInput() {
 		if(alg == AlgBfs)
 			searcher = make_shared<BFS>(tree);
 
+		searcher->useDiagonals(useDiag);
 		searcher->start(start, goal);
 	}
 
@@ -162,13 +167,17 @@ void StatePathfinder::handleInput() {
 
 	if (engine->KeyHit(settings.getKeyCode("Switch Algorithm")))
 		alg = (alg + 1) % 2;
+
+	if (engine->KeyHit(settings.getKeyCode("Diagonals")))
+		useDiag = !useDiag;
 }
 
 void StatePathfinder::displayGUI() {
 	string alg_str = (alg == AlgBfs) ? "Breadth-First" : "A*";
+	string diag_str = (useDiag ? "On" : "Off");
 
 	font->Draw(key_list, 10, 10, kWhite);
-	font->Draw("Algorithm: " + alg_str, 10, 30, kWhite);
+	font->Draw("Diagonals: " + diag_str + "  /  " + "Algorithm: " + alg_str, 10, 34, kLightGrey);
 }
 
 void StatePathfinder::clearPathSearch() {

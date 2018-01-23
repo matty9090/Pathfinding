@@ -28,7 +28,7 @@ class StatePathfinder : public State {
 		Tree::Node start, goal;
 		Vec2<size_t> dims;
 
-		bool found;
+		bool found, useDiag;
 		int pathNum;
 		float scale, timer;
 		Vec3<> origin;

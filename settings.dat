@@ -9,7 +9,8 @@
 		{ "use": "Start",				"txt": "F1", "code": 112 },
 		{ "use": "Clear",				"txt": "F2", "code": 113 },
 		{ "use": "Switch Algorithm",	"txt": "F3", "code": 114 },
-		{ "use": "Main Menu",			"txt": "B",  "code": 66 }
+		{ "use": "Main Menu",			"txt": "B",  "code": 66 },
+		{ "use": "Diagonals",			"txt": "D",  "code": 68 }
 	],
 	
 	"maps": [
