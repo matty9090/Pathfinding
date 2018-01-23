@@ -105,16 +105,30 @@
 		},
 		
 		{
-			"name": "OpenList",
+			"name": "OpenList_AS",
 			"file": "Cube.x",
 			"tex": "red.jpg",
 			"scale": 0.4
 		},
 		
 		{
-			"name": "ClosedList",
+			"name": "ClosedList_AS",
 			"file": "Cube.x",
 			"tex": "green.jpg",
+			"scale": 0.4
+		},
+		
+		{
+			"name": "OpenList_BFS",
+			"file": "Cube.x",
+			"tex": "orange.jpg",
+			"scale": 0.4
+		},
+		
+		{
+			"name": "ClosedList_BFS",
+			"file": "Cube.x",
+			"tex": "purple.jpg",
 			"scale": 0.4
 		}
 	]
