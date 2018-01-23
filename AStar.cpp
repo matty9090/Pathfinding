@@ -14,13 +14,13 @@ void AStar::start(Tree::Node _start, Tree::Node _goal) {
 
 	for (int y = 0; y < tree.getGridSize().y; y++) {
 		for (int x = 0; x < tree.getGridSize().x; x++) {
-			g_score[tree.getNode(x, y)] = 10000.f;
-			f_score[tree.getNode(x, y)] = 10000.f;
+			tree.getNode(x, y)->score = 10000;
+			tree.getNode(x, y)->estimate = 10000;
 		}
 	}
 
-	g_score[startn] = 0.f;
-	f_score[startn] = heuristic(startn, goaln);
+	startn->score = 0;
+	startn->estimate = heuristic(startn, goaln);
 
 	open.insert(startn);
 
@@ -33,11 +33,11 @@ void AStar::start(Tree::Node _start, Tree::Node _goal) {
 int AStar::step() {
 	if (!open.empty()) {
 		Tree::Node current;
-		float min_score = 10000.f;
+		int min_score = 10000;
 
 		for (auto n : open)
-			if (f_score[n] < min_score)
-				min_score = f_score[n], current = n;
+			if (n->estimate < min_score)
+				min_score = n->estimate, current = n;
 
 		if (current == goaln) {
 			goal_found = true;
@@ -69,15 +69,17 @@ int AStar::step() {
 			if (open.find(node) == open.end())
 				open.insert(node);
 
-			float n_score = g_score[current] + (float)current->cost;
+			int n_score = current->score + current->cost;
 
-			if (n_score >= g_score[node])
+			if (n_score >= node->score)
 				continue;
 
 			data[node] = current;
-			g_score[node] = n_score;
-			f_score[node] = n_score + heuristic(node, goaln);
+			node->score = n_score;
+			node->estimate = n_score + heuristic(node, goaln);
 		}
+
+		
 	} else
 		return Failed;
 	
@@ -98,6 +100,6 @@ void AStar::construct_path() {
 }
 
 // Manhattan Distance
-float AStar::heuristic(Tree::Node start, Tree::Node end) {
-	return (float)abs(start->pos.x - end->pos.x) + (float)abs(start->pos.y - end->pos.y);
+int AStar::heuristic(Tree::Node start, Tree::Node end) {
+	return abs(start->pos.x - end->pos.x) + abs(start->pos.y - end->pos.y);
 }
