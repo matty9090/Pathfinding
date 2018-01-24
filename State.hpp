@@ -4,6 +4,11 @@
 
 #include "Settings.hpp"
 
+/*
+	Abstract state class
+	To be derived from
+*/
+
 class CState {
 	public:
 		CState(tle::I3DEngine *engine, CSettings &settings) : mpEngine(engine), mSettings(settings) {}
@@ -11,6 +16,7 @@ class CState {
 		virtual void Init() = 0;
 		virtual int Run() = 0;
 
+		// Store all possible states in an enum
 		enum EStates { Menu, MapChooser, Pathfinder, Exit };
 
 	protected:

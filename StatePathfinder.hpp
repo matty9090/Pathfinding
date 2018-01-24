@@ -12,6 +12,10 @@
 #include "BFS.hpp"
 #include "AStar.hpp"
 
+/*
+	State to handle the pathfinding
+*/
+
 class CStatePathfinder : public CState {
 	public:
 		CStatePathfinder(tle::I3DEngine *engine, CSettings &settings);
@@ -48,6 +52,7 @@ class CStatePathfinder : public CState {
 		std::map<std::string, tle::IModel*> mModels;
 		std::map<int, std::pair<std::string, int>> mNodeTypes;
 
+		// Encapsulate map data (associates models with the node map)
 		struct SNodeMap {
 			std::vector<std::vector<CTree::Node>> mMapData;
 			std::vector<std::vector<tle::IModel*>> mModels;

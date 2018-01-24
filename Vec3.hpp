@@ -2,6 +2,9 @@
 
 #include <string>
 
+/*
+	2D vector class
+*/
 template <class T = int> struct Vec2 {
 	T x, y;
 
@@ -25,6 +28,9 @@ template <class T = int> struct Vec2 {
 	}
 };
 
+/*
+	3D vector class
+*/
 template <class T = float> struct Vec3 {
 	T x, y, z;
 	

@@ -7,6 +7,10 @@
 #include "JSON.hpp"
 #include "Vec3.hpp"
 
+/*
+	Class to handle the settings file and store the settings data
+*/
+
 class CSettings {
 	public:
 		CSettings(std::string file);
@@ -17,6 +21,7 @@ class CSettings {
 		float GetMapScale() { return mMapScale; }
 		std::string GetMapsFolder() { return mMapsFolder; }
 
+		// Encapsulate a model
 		struct SModel {
 			std::string mFile, mTex;
 			Vec3<> mPos;
@@ -24,11 +29,13 @@ class CSettings {
 			float mScale;
 		};
 
+		// Encapsulate a map description
 		struct SMap {
 			std::string mMapFile, mCoordsFile;
 			Vec2<size_t> mDims;
 		};
 
+		// Encapsulate a particular key
 		struct SKeyDesc {
 			std::string mDesc;
 			tle::EKeyCode mCode;
@@ -39,14 +46,23 @@ class CSettings {
 		std::map<std::string, SKeyDesc> &GetKeys() { return mKeys; }
 		tle::EKeyCode GetKeyCode(std::string txt) { return mKeys[txt].mCode; }
 
-		SMap &getCurrentMap() { return mMaps[mCurrentMap]; }
+		SMap &GetCurrentMap() { return mMaps[mCurrentMap]; }
+		Vec2<size_t> GetMapSize() { return Vec2<size_t>(10, 10); }
+
+		int getMenuSpacing() { return mMenuSpacing; }
+		Vec2<float> getLogoPos() { return mLogoPos; }
+		Vec2<float> getMenuPos() { return mMenuPos; }
+		size_t getMenuFontSize() { return mMenuFontSize; }
 
 	private:
 		picojson::value mJson;
 
 		float mMapScale;
-		size_t mWindowW, mWindowH;
+		size_t mWindowW, mWindowH, mMenuFontSize;
 		std::string mMapsFolder, mCurrentMap;
+
+		int mMenuSpacing;
+		Vec2<float> mLogoPos, mMenuPos;
 		
 		std::map<std::string, SModel> mModels;
 		std::map<std::string, SMap> mMaps;

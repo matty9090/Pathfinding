@@ -5,6 +5,10 @@
 
 #include "Vec3.hpp"
 
+/*
+	Class to load and a map file
+*/
+
 class CMapLoader {
 	public:
 		CMapLoader();

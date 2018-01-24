@@ -8,6 +8,10 @@
 #include "State.hpp"
 #include "Settings.hpp"
 
+/*
+	Class to run the program, handle and switch between states
+*/
+
 class CApp {
 	public:
 		CApp(CSettings &settings);

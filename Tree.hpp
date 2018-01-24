@@ -8,6 +8,10 @@
 
 #include "Vec3.hpp"
 
+/*
+	Map node
+	Stores values for use in the algorithms as well as it's world position
+*/
 struct SNode {
 	Vec2<> mPos;
 	int mCost;
@@ -17,6 +21,9 @@ struct SNode {
 	SNode(Vec2<> p, int c) : mPos(p), mCost(c) {};
 };
 
+/*
+	Tree class to store the nodes and do operations on them
+*/
 class CTree {
 	public:
 		typedef std::shared_ptr<SNode> Node;
@@ -35,6 +42,9 @@ class CTree {
 		size_t mWidth, mHeight;
 };
 
+/*
+	Abstract class for a search algorithm
+*/
 class CSearchAlgorithm {
 	public:
 		enum EStatus { Found, Searching, Failed };

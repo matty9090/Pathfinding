@@ -2,6 +2,10 @@
 
 #include "Tree.hpp"
 
+/*
+	Breadth-First search implementation
+*/
+
 class CBFS : public CSearchAlgorithm {
 	public:
 		CBFS(CTree &tree);

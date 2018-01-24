@@ -2,6 +2,13 @@
 	"window_w": 1024,
 	"window_h": 768,
 	
+	"menu_items_x": 512,
+	"menu_items_y": 380,
+	"menu_items_spacing": 56,
+	"menu_font_size": 46,
+	"logo_x": 314,
+	"logo_y": 76,
+	
 	"map_scale" : 11,
 	"maps_folder": "maps/",
 	

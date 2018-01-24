@@ -9,6 +9,11 @@
 #include "Settings.hpp"
 #include "State.hpp"
 
+/*
+	Menu state
+	Draws menu items
+*/
+
 class CStateMenu : public CState {
 	public:
 		CStateMenu(tle::I3DEngine *engine, CSettings &settings);
@@ -23,6 +28,7 @@ class CStateMenu : public CState {
 		tle::ISprite *mpSprBg;
 		tle::ISprite *mpSprLogo;
 
+		// Each menu item has various info needed to be stored
 		struct MenuItem {
 			std::string mTxt;
 			MenuAction mAction;

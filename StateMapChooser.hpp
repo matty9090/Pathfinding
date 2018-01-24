@@ -9,6 +9,10 @@
 #include "Settings.hpp"
 #include "State.hpp"
 
+/*
+	State to list maps so the user can select them
+*/
+
 class CStateMapChooser : public CState {
 	public:
 		CStateMapChooser(tle::I3DEngine *engine, CSettings &settings);
@@ -21,6 +25,7 @@ class CStateMapChooser : public CState {
 		tle::ISprite *mpSprBg;
 		tle::ISprite *mpSpriteLogo;
 
+		// Each menu item has various info needed to be stored
 		struct MenuItem {
 			std::string mTxt;
 			int mMapID;

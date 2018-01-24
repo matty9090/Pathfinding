@@ -2,11 +2,15 @@
 
 #include "Tree.hpp"
 
+/*
+	A* search algorithm implementation
+*/
+
 class CAStar : public CSearchAlgorithm {
 	public:
 		CAStar(CTree &tree);
 
-		void Start(CTree::Node Start, CTree::Node goal);
+		void Start(CTree::Node start, CTree::Node goal);
 		int Step();
 
 	private:
