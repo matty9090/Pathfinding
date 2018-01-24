@@ -12,6 +12,8 @@ void AStar::start(Tree::Node _start, Tree::Node _goal) {
 	startn = _start;
 	goaln = _goal;
 
+	mNumSearches = 0;
+
 	for (unsigned y = 0; y < tree.getGridSize().y; y++) {
 		for (unsigned x = 0; x < tree.getGridSize().x; x++) {
 			tree.getNode(x, y)->score = 10000;
@@ -32,6 +34,8 @@ void AStar::start(Tree::Node _start, Tree::Node _goal) {
 
 int AStar::step() {
 	if (!open.empty()) {
+		mNumSearches++;
+
 		Tree::Node current;
 		int min_score = 10000;
 

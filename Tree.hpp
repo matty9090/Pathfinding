@@ -46,6 +46,7 @@ class SearchAlgorithm {
 		
 		std::vector<Vec2<>> getPath() { return path; }
 
+		int GetNumSearches() { return mNumSearches; }
 		void useDiagonals(bool diag) { useDiag = diag; }
 
 		std::set<Tree::Node> getOpenList() { return open; }
@@ -59,6 +60,7 @@ class SearchAlgorithm {
 		std::set<Tree::Node> open;
 		std::set<Tree::Node> closed;
 
+		int mNumSearches;
 		bool useDiag;
 
 		int heuristic(Tree::Node start, Tree::Node end);

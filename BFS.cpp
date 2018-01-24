@@ -12,6 +12,8 @@ void BFS::start(Tree::Node _start, Tree::Node _goal) {
 	startn = _start;
 	goaln = _goal;
 
+	mNumSearches = 0;
+
 	goal_found = false;
 
 	open.insert(startn);
@@ -22,6 +24,8 @@ void BFS::start(Tree::Node _start, Tree::Node _goal) {
 
 int BFS::step() {
 	if (!open.empty()) {
+		mNumSearches++;
+
 		Tree::Node current = *open.begin();
 		open.erase(current);
 

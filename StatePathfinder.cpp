@@ -65,7 +65,7 @@ int StatePathfinder::run() {
 					else
 						displayPathCatmullRom(a_searcher->getPath(), "Path_AS");
 
-					writeResults(a_searcher->getPath(), "AS");
+					writeResults(a_searcher->getPath(), "AS", a_searcher->GetNumSearches());
 
 				} else
 					displayPathSearch(a_searcher->getOpenList(), a_searcher->getClosedList(), "_AS");
@@ -82,7 +82,7 @@ int StatePathfinder::run() {
 					else
 						displayPathCatmullRom(b_searcher->getPath(), "Path_BFS");
 
-					writeResults(b_searcher->getPath(), "BFS");
+					writeResults(b_searcher->getPath(), "BFS", b_searcher->GetNumSearches());
 				} else
 					displayPathSearch(b_searcher->getOpenList(), b_searcher->getClosedList(), "_BFS");
 			}
@@ -234,12 +234,14 @@ void StatePathfinder::clearPathLine() {
 	path.clear();
 }
 
-void StatePathfinder::writeResults(std::vector<Vec2<>> path, string ext) {
+void StatePathfinder::writeResults(std::vector<Vec2<>> path, string ext, int searches) {
 	string map_file = settings.currentMap().map_file;
 	ofstream file("Output_" + map_file.substr(0, map_file.find_last_of('.')) + "_" + ext + ".txt");
 
 	for (auto coord : path)
 		file << coord.toString() << endl;
+
+	file << endl << "Number of linear searches: " << searches << endl;
 
 	file.close();
 }

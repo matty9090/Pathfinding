@@ -68,7 +68,7 @@ class StatePathfinder : public State {
 		void displayGUI();
 		void clearPathSearch();
 		void clearPathLine();
-		void writeResults(std::vector<Vec2<>> path, string ext);
+		void writeResults(std::vector<Vec2<>> path, string ext, int searches);
 		void displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed, string id);
 		void displayPathBezier(std::vector<Vec2<>> path, std::string id);
 		void displayPathCatmullRom(std::vector<Vec2<>> path, std::string id);
