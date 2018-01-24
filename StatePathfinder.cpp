@@ -1,3 +1,6 @@
+/// Author: Matthew Lowe
+/// Copyright (c) 2018
+
 #include "StatePathfinder.hpp"
 #include "MapLoader.hpp"
 
@@ -279,8 +282,8 @@ void CStatePathfinder::DisplayGUI()
 	string diagStr = (mUseDiag ? "On" : "Off");
 	string curvStr = (mBezier ? "Bezier" : "Catmul-Rom");
 
-	mpFont->Draw(mKeyList, mSettings.GetKeysPos().x, mSettings.GetKeysPos().y, kWhite);
-	mpFont->Draw("Diagonals: " + diagStr + "  /  " + "Curve: " + curvStr + "  /  " + "Algorithm: " + algStr, mSettings.GetInfoPos().x, mSettings.GetInfoPos().y, kLightGrey);
+	mpFont->Draw(mKeyList, (int)mSettings.GetKeysPos().x, (int)mSettings.GetKeysPos().y, kWhite);
+	mpFont->Draw("Diagonals: " + diagStr + "  /  " + "Curve: " + curvStr + "  /  " + "Algorithm: " + algStr, (int)mSettings.GetInfoPos().x, (int)mSettings.GetInfoPos().y, kLightGrey);
 }
 
 // Clear all the models associated with the path line

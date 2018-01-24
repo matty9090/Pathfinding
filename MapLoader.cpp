@@ -1,3 +1,6 @@
+/// Author: Matthew Lowe
+/// Copyright (c) 2018
+
 #include "MapLoader.hpp"
 
 #include <cassert>
@@ -25,7 +28,7 @@ std::vector<std::vector<int>> CMapLoader::Load(std::string map_file)
 		// Allocate memory for vector of vectors
 		AllocSpace(v);
 
-		// Loop through rows and colums
+		// Loop through rows and columns
 		for (unsigned y = 0; y < mHeight; ++y)
 		{
 			for (unsigned x = 0; x <= mWidth; ++x)

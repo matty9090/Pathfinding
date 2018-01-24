@@ -1,3 +1,6 @@
+/// Author: Matthew Lowe
+/// Copyright (c) 2018
+
 #include "StateMapChooser.hpp"
 #include "MapLoader.hpp"
 
@@ -31,7 +34,7 @@ void CStateMapChooser::Init()
 	// Align the menu items
 	for (auto &item : mItems)
 	{
-		item.second.mPos = Vec2<>(mSettings.GetMenuPos().x, i * mSettings.GetMenuSpacing() + mSettings.GetMenuPos().y);
+		item.second.mPos = Vec2<>((int)mSettings.GetMenuPos().x, i * mSettings.GetMenuSpacing() + (int)mSettings.GetMenuPos().y);
 		++i;
 	}
 

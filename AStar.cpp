@@ -1,3 +1,6 @@
+/// Author: Matthew Lowe
+/// Copyright (c) 2018
+
 #include "AStar.hpp"
 
 #include <iostream>
