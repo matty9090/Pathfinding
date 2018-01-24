@@ -6,7 +6,8 @@
 	A* search algorithm implementation
 */
 
-class CAStar : public CSearchAlgorithm {
+class CAStar : public CSearchAlgorithm
+{
 	public:
 		CAStar(CTree &tree);
 

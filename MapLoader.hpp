@@ -9,7 +9,8 @@
 	Class to load and a map file
 */
 
-class CMapLoader {
+class CMapLoader
+{
 	public:
 		CMapLoader();
 

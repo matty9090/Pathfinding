@@ -12,7 +12,8 @@
 	Class to run the program, handle and switch between states
 */
 
-class CApp {
+class CApp
+{
 	public:
 		CApp(CSettings &settings);
 		~CApp();

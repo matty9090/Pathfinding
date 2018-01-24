@@ -17,7 +17,8 @@ CStatePathfinder::CStatePathfinder(tle::I3DEngine *engine, CSettings &settings)
 }
 
 // Initialise path finding variables and scene
-void CStatePathfinder::Init() {
+void CStatePathfinder::Init()
+{
 	mPathNum = 0;
 	mTimer   = 0.f;
 	mBezier  = true;
@@ -49,11 +50,14 @@ void CStatePathfinder::Init() {
 }
 
 // Game loop
-int CStatePathfinder::Run() {
-	while (mpEngine->IsRunning()) {
+int CStatePathfinder::Run()
+{
+	while (mpEngine->IsRunning())
+	{
 		HandleInput();
 
-		if (mpEngine->KeyHit(mSettings.GetKeyCode("Main Menu"))) {
+		if (mpEngine->KeyHit(mSettings.GetKeyCode("Main Menu")))
+		{
 			Cleanup();
 			return CState::Menu;
 		}
@@ -61,15 +65,18 @@ int CStatePathfinder::Run() {
 		mTimer -= mpEngine->Timer();
 
 		// Steps through the algorithm one time every 0.07 seconds
-		if (mTimer < 0.0f) {
+		if (mTimer < 0.0f)
+		{
 			mTimer = mSettings.GetStepSpeed();
 
 			// If A* not found goal step through
-			if (!mFoundA) {
+			if (!mFoundA)
+			{
 				int r = mSearcherA->Step();
 
 				// If found goal, display the interpolated path, otherwise draw the open/closed list nodes
-				if (r == CSearchAlgorithm::Found) {
+				if (r == CSearchAlgorithm::Found)
+				{
 					mFoundA = true;
 
 					if (mBezier)
@@ -84,11 +91,13 @@ int CStatePathfinder::Run() {
 			}
 
 			// If BFS not found goal step through
-			if (!mFoundB) {
+			if (!mFoundB)
+			{
 				int r = mSearcherB->Step();
 
 				// If found goal, display the interpolated path, otherwise draw the open/closed list nodes
-				if (r == CSearchAlgorithm::Found) {
+				if (r == CSearchAlgorithm::Found)
+				{
 					mFoundB = true;
 
 					if (mBezier)
@@ -113,7 +122,8 @@ int CStatePathfinder::Run() {
 }
 
 // Load the map
-void CStatePathfinder::LoadMaps() {
+void CStatePathfinder::LoadMaps()
+{
 	CSettings::SMap curMap = mSettings.GetCurrentMap();
 	CMapLoader loader;
 	pair<Vec2<>, Vec2<>> coords;
@@ -141,16 +151,19 @@ void CStatePathfinder::LoadMaps() {
 }
 
 // Create the models using the data from settings
-void CStatePathfinder::LoadModels() {
+void CStatePathfinder::LoadModels()
+{
 	auto meshList = mSettings.GetModels();
 
 	// Loop through all the meshes defined in settings
-	for (auto mesh : meshList) {
+	for (auto mesh : meshList)
+	{
 		// Load the mesh
 		mMeshes[mesh.first] = mpEngine->LoadMesh(mesh.second.mFile);
 
 		// If it's a 'one-off' mesh aka only 1 instance needed (e.g. skybox), create a model in the scene
-		if (mesh.second.mInst) {
+		if (mesh.second.mInst)
+		{
 			mModels[mesh.first] = mMeshes[mesh.first]->CreateModel(mesh.second.mPos.x, mesh.second.mPos.y, mesh.second.mPos.z);
 
 			// Set the skin if not default
@@ -170,7 +183,8 @@ void CStatePathfinder::LoadModels() {
 }
 
 // Free up the map data memory
-void CStatePathfinder::FreeMemory() {
+void CStatePathfinder::FreeMemory()
+{
 	for (unsigned y = 0; y < mDims.y; ++y)
 		mMap.mMapData[y].clear();
 
@@ -178,7 +192,8 @@ void CStatePathfinder::FreeMemory() {
 }
 
 // Catmull-rom spline
-float CStatePathfinder::cspline(float p1, float p2, float p3, float p4, float t) {
+float CStatePathfinder::cspline(float p1, float p2, float p3, float p4, float t)
+{
 	float a = -p1 + 3 * p2 - 3 * p3 + p4;
 	float b = 2 * p1 - 5 * p2 + 4 * p3 - p4;
 	float c = p3 - p1;
@@ -188,22 +203,26 @@ float CStatePathfinder::cspline(float p1, float p2, float p3, float p4, float t)
 }
 
 // Bezier spline
-float CStatePathfinder::bspline(float p1, float p2, float p3, float p4, float t) {
+float CStatePathfinder::bspline(float p1, float p2, float p3, float p4, float t)
+{
 	return powf(1 - t, 3) * p1 + 3 * t * powf(1 - t, 2) * p2 + 3 * t * t * (1 - t) * p3 + t * t * t * p4;
 }
 
 // Simple linear interpolation
-float CStatePathfinder::lerp(float v0, float v1, float t) {
+float CStatePathfinder::lerp(float v0, float v1, float t)
+{
 	return (1 - t) * v0 + t * v1;
 }
 
 // Handle keyboard inputs
-void CStatePathfinder::HandleInput() {
+void CStatePathfinder::HandleInput()
+{
 	if (mpEngine->KeyHit(Key_Escape))
 		mpEngine->Stop();
 
 	// Key press to start the search
-	if (mpEngine->KeyHit(mSettings.GetKeyCode("Start"))) {
+	if (mpEngine->KeyHit(mSettings.GetKeyCode("Start")))
+	{
 		// Clear any previous searches
 		ClearPathSearch();
 		ClearPathLine();
@@ -234,7 +253,8 @@ void CStatePathfinder::HandleInput() {
 	}
 
 	// Button to clear the searches
-	if (mFoundA && mFoundB && mpEngine->KeyHit(mSettings.GetKeyCode("Clear"))) {
+	if (mFoundA && mFoundB && mpEngine->KeyHit(mSettings.GetKeyCode("Clear")))
+	{
 		ClearPathSearch();
 		ClearPathLine();
 	}
@@ -253,7 +273,8 @@ void CStatePathfinder::HandleInput() {
 }
 
 // Draw the UI elements
-void CStatePathfinder::DisplayGUI() {
+void CStatePathfinder::DisplayGUI()
+{
 	string algStr = (mAlg == AlgBfs) ? "Breadth-First" : ((mAlg == AlgAStar) ? "A*" : "BFS + A*");
 	string diagStr = (mUseDiag ? "On" : "Off");
 	string curvStr = (mBezier ? "Bezier" : "Catmul-Rom");
@@ -263,7 +284,8 @@ void CStatePathfinder::DisplayGUI() {
 }
 
 // Clear all the models associated with the path line
-void CStatePathfinder::ClearPathSearch() {
+void CStatePathfinder::ClearPathSearch()
+{
 	for (auto &i : mSearchPath)
 		i->GetMesh()->RemoveModel(i);
 
@@ -271,8 +293,10 @@ void CStatePathfinder::ClearPathSearch() {
 }
 
 // Clear all the models associated with visualising the open and closed list
-void CStatePathfinder::ClearPathLine() {
-	for (unsigned i = 0; i < mPath.size(); i++) {
+void CStatePathfinder::ClearPathLine()
+{
+	for (unsigned i = 0; i < mPath.size(); i++)
+	{
 		for (auto &node : mPath[i])
 			node->GetMesh()->RemoveModel(node);
 
@@ -283,7 +307,8 @@ void CStatePathfinder::ClearPathLine() {
 }
 
 // Write the results to the file
-void CStatePathfinder::WriteResults(std::vector<Vec2<>> path, string ext, int searches) {
+void CStatePathfinder::WriteResults(std::vector<Vec2<>> path, string ext, int searches)
+{
 	string mapFile = mSettings.GetCurrentMap().mMapFile;
 	ofstream file("Output_" + mapFile.substr(0, mapFile.find_last_of('.')) + "_" + ext + ".txt");
 
@@ -296,8 +321,10 @@ void CStatePathfinder::WriteResults(std::vector<Vec2<>> path, string ext, int se
 }
 
 // Draw the open and closed list using models
-void CStatePathfinder::DisplayPathSearch(std::set<CTree::Node> open, std::set<CTree::Node> closed, string id) {
-	for (auto &node : open) {
+void CStatePathfinder::DisplayPathSearch(std::set<CTree::Node> open, std::set<CTree::Node> closed, string id)
+{
+	for (auto &node : open)
+	{
 		int x = node->mPos.x, y = node->mPos.y;
 
 		// Create model and display at correct position using the scale and origin of the map
@@ -306,7 +333,8 @@ void CStatePathfinder::DisplayPathSearch(std::set<CTree::Node> open, std::set<CT
 		mSearchPath.back()->Scale(mSettings.GetModels()["OpenList" + id].mScale);
 	}
 
-	for (auto &node : closed) {
+	for (auto &node : closed)
+	{
 		int x = node->mPos.x, y = node->mPos.y;
 
 		// Create model and display at correct position using the scale and origin of the map
@@ -317,8 +345,10 @@ void CStatePathfinder::DisplayPathSearch(std::set<CTree::Node> open, std::set<CT
 }
 
 // Draw a path using bezier for the corners
-void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
-	if (!p.empty()) {
+void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id)
+{
+	if (!p.empty())
+	{
 		// mPath is a vector to support multiple paths drawing simultaneously, expand for new path
 		mPath.resize(++mPathNum);
 		
@@ -326,7 +356,8 @@ void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 		int steps = mSettings.GetBezierSteps();
 
 		// Loop through every path node
-		for (unsigned i = 0; i < p.size(); i++) {
+		for (unsigned i = 0; i < p.size(); i++)
+		{
 			// Ge start, midpoint and final node coordinates (the 3 nodes associated with a corner)
 			Vec2<> ps = (i > 0) ? p[i - 1] : p.front();
 			Vec2<> pm = p[i];
@@ -337,7 +368,8 @@ void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 			Vec2<float> dirB = Vec2<float>((float)pf.x, (float)pf.y) - Vec2<float>((float)pm.x, (float)pm.y);
 
 			// Corner ahead
-			if (ps.x != pf.x && ps.y != pf.y) {
+			if (ps.x != pf.x && ps.y != pf.y)
+			{
 				// Pick the 4 points to use for the bezier curve (using the 3 nodes coordinates above)
 				Vec2<float> p1 = Vec2<float>((float)ps.x, (float)ps.y) + dirA / 2.0f;
 				Vec2<float> p2((float)pm.x, (float)pm.y);
@@ -345,7 +377,8 @@ void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 				Vec2<float> p4 = p3;
 
 				// Draw the curve, using the bezier spline calculations
-				for (int n = 0; n < steps; n++) {
+				for (int n = 0; n < steps; n++)
+				{
 					float cx = bspline(p1.x, p2.x, p3.x, p4.x, (float)n / (float)steps);
 					float cy = bspline(p1.y, p2.y, p3.y, p4.y, (float)n / (float)steps);
 
@@ -354,9 +387,12 @@ void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 					mPath[mPathNum - 1].back()->SetSkin(mSettings.GetModels()[id].mTex);
 					mPath[mPathNum - 1].back()->Scale(mSettings.GetModels()[id].mScale);
 				}
-			} else {
+			}
+			else
+			{
 				// Just draw a linear line since no corner (straight)
-				for (int n = 0; n < steps; n++) {
+				for (int n = 0; n < steps; n++)
+				{
 					float cx = lerp(pm.x - dirA.x / 2.0f, pm.x + dirB.x / 2.0f, (float)n / (float)steps);
 					float cy = lerp(pm.y - dirA.y / 2.0f, pm.y + dirB.y / 2.0f, (float)n / (float)steps);
 
@@ -371,8 +407,10 @@ void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 }
 
 // Draw the path using Catmull-Rom splines
-void CStatePathfinder::DisplayPathCatmullRom(std::vector<Vec2<>> p, string id) {
-	if (!p.empty()) {
+void CStatePathfinder::DisplayPathCatmullRom(std::vector<Vec2<>> p, string id)
+{
+	if (!p.empty())
+	{
 		// mPath is a vector to support multiple paths drawing simultaneously, expand for new path
 		mPath.resize(++mPathNum);
 
@@ -380,7 +418,8 @@ void CStatePathfinder::DisplayPathCatmullRom(std::vector<Vec2<>> p, string id) {
 		int steps = mSettings.GetCatmullSteps();
 
 		// Loop through every path node
-		for (unsigned i = 0; i < p.size(); i++) {
+		for (unsigned i = 0; i < p.size(); i++)
+		{
 			// Pick the 4 points around the current node to create the spline with
 			Vec2<> p1 = (i > 0) ? p[i - 1] : p[0];
 			Vec2<> p2 = p[i];
@@ -388,7 +427,8 @@ void CStatePathfinder::DisplayPathCatmullRom(std::vector<Vec2<>> p, string id) {
 			Vec2<> p4 = (i < p.size() - 2) ? p[i + 2] : p.back();
 
 			// Draw the curve, using the Catmull-Rom spline calculations
-			for (int i = 0; i < steps; i++) {
+			for (int i = 0; i < steps; i++)
+			{
 				float cx = cspline((float)p1.x, (float)p2.x, (float)p3.x, (float)p4.x, (float)i / (float)steps);
 				float cy = cspline((float)p1.y, (float)p2.y, (float)p3.y, (float)p4.y, (float)i / (float)steps);
 
@@ -402,7 +442,8 @@ void CStatePathfinder::DisplayPathCatmullRom(std::vector<Vec2<>> p, string id) {
 }
 
 // Clean up meshes and free memory
-void CStatePathfinder::Cleanup() {
+void CStatePathfinder::Cleanup()
+{
 	ClearPathSearch();
 	ClearPathLine();
 
@@ -414,7 +455,8 @@ void CStatePathfinder::Cleanup() {
 }
 
 // Create all the models using the node map data
-void CStatePathfinder::SNodeMap::constructMap(Vec3<> origin, float scale) {
+void CStatePathfinder::SNodeMap::constructMap(Vec3<> origin, float scale)
+{
 	// Allocate memory for the container to store the models
 	mModels.resize(mParent.mDims.y);
 
@@ -422,8 +464,10 @@ void CStatePathfinder::SNodeMap::constructMap(Vec3<> origin, float scale) {
 		mModels[y].resize(mParent.mDims.x);
 
 	// Loop through rows and columns of map
-	for (unsigned y = 0; y < mParent.mDims.y; ++y) {
-		for (unsigned x = 0; x < mParent.mDims.y; ++x) {
+	for (unsigned y = 0; y < mParent.mDims.y; ++y)
+	{
+		for (unsigned x = 0; x < mParent.mDims.y; ++x)
+		{
 			// Get the type of node (Wood, Water etc...)
 			string type = mParent.mNodeTypes[mMapData[y][x]->mCost].first;
 
@@ -444,6 +488,7 @@ void CStatePathfinder::SNodeMap::constructMap(Vec3<> origin, float scale) {
 }
 
 // Helper function to translate a coordinate using the origin and scale of the world
-Vec3<> CStatePathfinder::SNodeMap::translate(Vec2<> coord, Vec3<> &origin, float scale) {
+Vec3<> CStatePathfinder::SNodeMap::translate(Vec2<> coord, Vec3<> &origin, float scale)
+{
 	return Vec3<>(coord.x * scale + origin.x, origin.y, coord.y * scale + origin.z);
 }

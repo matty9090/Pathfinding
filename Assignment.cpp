@@ -6,7 +6,8 @@
 // Only global variable needed is the path to the settings file
 const std::string gSettingsFile = "settings.dat";
 
-void main() {
+void main()
+{
 	// Load in the settings
 	CSettings settings(gSettingsFile);
 

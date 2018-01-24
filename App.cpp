@@ -6,7 +6,8 @@
 
 using namespace tle;
 
-CApp::CApp(CSettings &s) : mSettings(s) {
+CApp::CApp(CSettings &s) : mSettings(s)
+{
 	// Init TL-Engine
 	mEng = New3DEngine(kTLX);
 
@@ -25,13 +26,16 @@ CApp::CApp(CSettings &s) : mSettings(s) {
 }
 
 /* Cleanup */
-CApp::~CApp() {
+CApp::~CApp()
+{
 	mEng->Delete();
 }
 
 /* Infinite state loop, exits program when state is exit */
-void CApp::run() {
-	do {
+void CApp::run()
+{
+	do
+	{
 		// Initialise the state first
 		mStates[mState]->Init();
 

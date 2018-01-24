@@ -14,7 +14,8 @@
 	Draws menu items
 */
 
-class CStateMenu : public CState {
+class CStateMenu : public CState
+{
 	public:
 		CStateMenu(tle::I3DEngine *engine, CSettings &settings);
 
@@ -29,7 +30,8 @@ class CStateMenu : public CState {
 		tle::ISprite *mpSprLogo;
 
 		// Each menu item has various info needed to be stored
-		struct MenuItem {
+		struct MenuItem
+		{
 			std::string mTxt;
 			MenuAction mAction;
 			Vec2<> mPos;

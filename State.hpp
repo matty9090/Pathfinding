@@ -9,7 +9,8 @@
 	To be derived from
 */
 
-class CState {
+class CState
+{
 	public:
 		CState(tle::I3DEngine *engine, CSettings &settings) : mpEngine(engine), mSettings(settings) {}
 

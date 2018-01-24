@@ -6,7 +6,8 @@
 	Breadth-First search implementation
 */
 
-class CBFS : public CSearchAlgorithm {
+class CBFS : public CSearchAlgorithm
+{
 	public:
 		CBFS(CTree &tree);
 

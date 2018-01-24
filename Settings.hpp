@@ -11,7 +11,8 @@
 	Class to handle the settings file and store the settings data
 */
 
-class CSettings {
+class CSettings
+{
 	public:
 		CSettings(std::string file);
 
@@ -22,7 +23,8 @@ class CSettings {
 		std::string GetMapsFolder() { return mMapsFolder; }
 
 		// Encapsulate a model
-		struct SModel {
+		struct SModel
+		{
 			std::string mFile, mTex;
 			Vec3<> mPos;
 			bool mInst;
@@ -30,13 +32,15 @@ class CSettings {
 		};
 
 		// Encapsulate a map description
-		struct SMap {
+		struct SMap
+		{
 			std::string mMapFile, mCoordsFile;
 			Vec2<size_t> mDims;
 		};
 
 		// Encapsulate a particular key
-		struct SKeyDesc {
+		struct SKeyDesc
+		{
 			std::string mDesc;
 			tle::EKeyCode mCode;
 		};

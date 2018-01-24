@@ -2,7 +2,8 @@
 
 using namespace tle;
 
-CStateMenu::CStateMenu(tle::I3DEngine *engine, CSettings &settings) : CState(engine, settings) {
+CStateMenu::CStateMenu(tle::I3DEngine *engine, CSettings &settings) : CState(engine, settings)
+{
 	
 }
 
@@ -21,7 +22,8 @@ void CStateMenu::Init() {
 	int i = 0;
 
 	// Align the menu items
-	for (auto &item : mItems) {
+	for (auto &item : mItems)
+	{
 		item.second.mPos = Vec2<>(mSettings.GetMenuPos().x, i * mSettings.GetMenuSpacing() + mSettings.GetMenuPos().y);
 		++i;
 	}
@@ -31,9 +33,12 @@ void CStateMenu::Init() {
 }
 
 // Main loop
-int CStateMenu::Run() {
-	while (mpEngine->IsRunning() && !mStateChange) {
-		if (mpEngine->KeyHit(Key_Escape)) {
+int CStateMenu::Run()
+{
+	while (mpEngine->IsRunning() && !mStateChange)
+	{
+		if (mpEngine->KeyHit(Key_Escape))
+		{
 			mpEngine->Stop();
 			break;
 		}
@@ -59,13 +64,15 @@ int CStateMenu::Run() {
 }
 
 // Select map option
-void CStateMenu::ActionSelect() {
+void CStateMenu::ActionSelect()
+{
 	mStateChange = true;
 	mReturnState = CState::MapChooser;
 }
 
 // Exit option
-void CStateMenu::ActionExit() {
+void CStateMenu::ActionExit()
+{
 	mStateChange = true;
 	mReturnState = CState::Exit;
 }

@@ -5,12 +5,14 @@
 using namespace std;
 
 /* Initialise using a node tree from a map */
-CAStar::CAStar(CTree &tree) : CSearchAlgorithm(tree) {
+CAStar::CAStar(CTree &tree) : CSearchAlgorithm(tree)
+{
 
 }
 
 /* Set up values */
-void CAStar::Start(CTree::Node start, CTree::Node goal) {
+void CAStar::Start(CTree::Node start, CTree::Node goal)
+{
 	mStartNode = start;
 	mGoalNode = goal;
 
@@ -18,8 +20,10 @@ void CAStar::Start(CTree::Node start, CTree::Node goal) {
 	mNumSearches = 0;
 
 	// Scores initialised to a high value
-	for (unsigned y = 0; y < mTree.GetGridSize().y; y++) {
-		for (unsigned x = 0; x < mTree.GetGridSize().x; x++) {
+	for (unsigned y = 0; y < mTree.GetGridSize().y; y++)
+	{
+		for (unsigned x = 0; x < mTree.GetGridSize().x; x++)
+		{
 			mTree.GetNode(x, y)->mScore = 10000;
 			mTree.GetNode(x, y)->mEstimate = 10000;
 		}
@@ -39,9 +43,11 @@ void CAStar::Start(CTree::Node start, CTree::Node goal) {
 }
 
 /* One step/loop iteration of the algorithm */
-int CAStar::Step() {
+int CAStar::Step()
+{
 	// Loop through open list
-	if (!mOpenList.empty()) {
+	if (!mOpenList.empty())
+	{
 		mNumSearches++;
 
 		// Find the next node to process by choosing the lowest estimated score
@@ -53,7 +59,8 @@ int CAStar::Step() {
 				minScore = n->mEstimate, current = n;
 
 		// If this node is the goal then we found a path
-		if (current == mGoalNode) {
+		if (current == mGoalNode)
+		{
 			mGoalFound = true;
 			mConstructPath();
 			return Found;
@@ -71,7 +78,8 @@ int CAStar::Step() {
 		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x, current->mPos.y + 1)));
 		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x, current->mPos.y - 1)));
 		
-		if (mUseDiag) {
+		if (mUseDiag)
+		{
 			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x + 1, current->mPos.y + 1)));
 			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y - 1)));
 			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y + 1)));
@@ -79,7 +87,8 @@ int CAStar::Step() {
 		}
 
 		// Loop through all the neighbours
-		for (auto node : next) {
+		for (auto node : next)
+		{
 			// Discard nodes which are in the closed list already, aren't walkable or nodes which don't exist (out of bounds)
 			if (node == nullptr || node->mCost <= 0 || mClosedList.find(node) != mClosedList.end())
 				continue;
@@ -107,8 +116,10 @@ int CAStar::Step() {
 }
 
 /* Construct the path by following the nodes backwards(if the goal is found) */
-void CAStar::mConstructPath() {
-	if (mGoalFound) {
+void CAStar::mConstructPath()
+{
+	if (mGoalFound)
+	{
 		CTree::Node n = mGoalNode;
 		mPath.push_back(n->mPos);
 

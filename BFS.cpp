@@ -5,12 +5,14 @@
 using namespace std;
 
 /* Initialise using a node tree from a map */
-CBFS::CBFS(CTree &tree) : CSearchAlgorithm(tree) {
+CBFS::CBFS(CTree &tree) : CSearchAlgorithm(tree)
+{
 
 }
 
 /* Set up values */
-void CBFS::Start(CTree::Node start, CTree::Node goal) {
+void CBFS::Start(CTree::Node start, CTree::Node goal)
+{
 	mStartNode = start;
 	mGoalNode  = goal;
 
@@ -25,9 +27,11 @@ void CBFS::Start(CTree::Node start, CTree::Node goal) {
 }
 
 /* One step/loop iteration of the algorithm */
-int CBFS::Step() {
+int CBFS::Step()
+{
 	// Loop through open list
-	if (!mOpenList.empty()) {
+	if (!mOpenList.empty())
+	{
 		// Get the first node off the open list
 		CTree::Node current = *mOpenList.begin();
 
@@ -36,7 +40,8 @@ int CBFS::Step() {
 		mClosedList.insert(current);
 
 		// If this node is the goal then we found a path
-		if (current == mGoalNode) {
+		if (current == mGoalNode)
+		{
 			mGoalFound = true;
 			mConstructPath();
 			return Found;
@@ -50,7 +55,8 @@ int CBFS::Step() {
 		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x, current->mPos.y + 1)));
 		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x, current->mPos.y - 1)));
 
-		if (mUseDiag) {
+		if (mUseDiag)
+		{
 			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x + 1, current->mPos.y + 1)));
 			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y - 1)));
 			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y + 1)));
@@ -58,12 +64,14 @@ int CBFS::Step() {
 		}
 
 		// Loop through all the neighbours and add them to the open list if they aren't already on there
-		for (auto node : next) {
+		for (auto node : next)
+		{
 			// Discard nodes which are in the closed list already, aren't walkable or nodes which don't exist (out of bounds)
 			if (node == nullptr || node->mCost <= 0 || mClosedList.find(node) != mClosedList.end())
 				continue;
 
-			if (mOpenList.find(node) == mOpenList.end()) {
+			if (mOpenList.find(node) == mOpenList.end())
+			{
 				mData[node] = current;
 				mOpenList.insert(node);
 			}
@@ -75,12 +83,14 @@ int CBFS::Step() {
 }
 
 /* Construct the path by following the nodes backwards(if the goal is found) */
-void CBFS::mConstructPath() {
+void CBFS::mConstructPath()
+{
 	if (mGoalFound) {
 		CTree::Node n = mGoalNode;
 		mPath.push_back(n->mPos);
 
-		while (n = mData[n]) {
+		while (n = mData[n])
+		{
 			mPath.push_back(n->mPos);
 			cout << n->mPos.toString() << endl;
 		}

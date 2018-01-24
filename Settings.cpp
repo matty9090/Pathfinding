@@ -4,7 +4,8 @@
 
 using namespace std;
 
-CSettings::CSettings(string file) {
+CSettings::CSettings(string file)
+{
 	// Parse the json file
 	ifstream f(file);
 	picojson::parse(mJson, f);
@@ -19,7 +20,8 @@ CSettings::CSettings(string file) {
 }
 
 // Load the general constants
-void CSettings::LoadProperties() {
+void CSettings::LoadProperties()
+{
 	mWindowW = (size_t)mJson.get("window_w").get<double>();
 	mWindowH = (size_t)mJson.get("window_h").get<double>();
 
@@ -57,12 +59,14 @@ void CSettings::LoadProperties() {
 }
 
 // Load the list of models needed
-void CSettings::LoadModels() {
+void CSettings::LoadModels()
+{
 	picojson::array modelList = mJson.get("models").get<picojson::array>();
 
 	cout << "Models:\n\n";
 
-	for (auto model : modelList) {
+	for (auto model : modelList)
+	{
 		// Read values from JSON file
 		string name = model.get("name").get<string>();
 		string file = model.get("file").get<string>();
@@ -72,19 +76,22 @@ void CSettings::LoadModels() {
 		cout << "\t" << name << " (" << file << ")";
 		
 		// Output debug info
-		if (!model.get("tex").is<picojson::null>()) {
+		if (!model.get("tex").is<picojson::null>())
+		{
 			tex = model.get("tex").get<string>();
 			cout << " using texture " << tex;
 		}
 
 		// Output debug info
-		if (!model.get("scale").is<picojson::null>()) {
+		if (!model.get("scale").is<picojson::null>())
+		{
 			scale = (float)model.get("scale").get<double>();
 			cout << " scaled to " << scale;
 		}
 
 		// If coordinates exist this the model only needed 1 instance
-		if (!model.get("x").is<picojson::null>()) {
+		if (!model.get("x").is<picojson::null>())
+		{
 			float x = (float)model.get("x").get<double>();
 			float y = (float)model.get("y").get<double>();
 			float z = (float)model.get("z").get<double>();
@@ -110,7 +117,8 @@ void CSettings::LoadMaps() {
 
 	cout << "Maps:\n\n";
 
-	for (auto m : mapList) {
+	for (auto m : mapList)
+	{
 		string name  = m.get("name").get<string>();
 		string mfile = m.get("map_file").get<string>();
 		string cfile = m.get("coords_file").get<string>();
@@ -133,10 +141,12 @@ void CSettings::LoadMaps() {
 }
 
 // Load the keys
-void CSettings::LoadKeys() {
+void CSettings::LoadKeys()
+{
 	picojson::array keysList = mJson.get("keys").get<picojson::array>();
 	
-	for (auto key : keysList) {
+	for (auto key : keysList)
+	{
 		string use = key.get("use").get<string>();
 		string txt = key.get("txt").get<string>();
 

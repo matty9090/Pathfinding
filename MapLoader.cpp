@@ -6,25 +6,30 @@
 
 using namespace std;
 
-CMapLoader::CMapLoader() {
+CMapLoader::CMapLoader()
+{
 
 }
 
 // Load the map file and return a multidimensional list of nodes
-std::vector<std::vector<int>> CMapLoader::Load(std::string map_file) {
+std::vector<std::vector<int>> CMapLoader::Load(std::string map_file)
+{
 	// Throw error if width and height aren't valid
 	assert(mWidth > 0 && mHeight > 0);
 
 	ifstream mapf(map_file);
 	std::vector<std::vector<int>> v;
 
-	if (mapf.is_open()) {
+	if (mapf.is_open())
+	{
 		// Allocate memory for vector of vectors
 		AllocSpace(v);
 
 		// Loop through rows and colums
-		for (unsigned y = 0; y < mHeight; ++y) {
-			for (unsigned x = 0; x <= mWidth; ++x) {
+		for (unsigned y = 0; y < mHeight; ++y)
+		{
+			for (unsigned x = 0; x <= mWidth; ++x)
+			{
 				// Read in 1 character (file doesn't use spaces)				
 				char c;
 				mapf.get(c);
@@ -44,12 +49,14 @@ std::vector<std::vector<int>> CMapLoader::Load(std::string map_file) {
 }
 
 /* Process the coordinates file */
-std::pair<Vec2<>, Vec2<>> CMapLoader::Coords(std::string coords_file) {
+std::pair<Vec2<>, Vec2<>> CMapLoader::Coords(std::string coords_file)
+{
 	Vec2<> start, goal;
 
 	ifstream coordf(coords_file);
 
-	if (coordf.is_open()) {
+	if (coordf.is_open())
+	{
 		int x0, y0, x1, y1;
 
 		// Read in the space separated coordinates
@@ -66,7 +73,8 @@ std::pair<Vec2<>, Vec2<>> CMapLoader::Coords(std::string coords_file) {
 }
 
 // Helper function to allocate space for the multidimensional vector
-void CMapLoader::AllocSpace(std::vector<std::vector<int>>& v) {
+void CMapLoader::AllocSpace(std::vector<std::vector<int>>& v)
+{
 	v.resize(mHeight);
 
 	for (unsigned i = 0; i < mHeight; ++i)

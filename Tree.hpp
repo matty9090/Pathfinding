@@ -12,7 +12,8 @@
 	Map node
 	Stores values for use in the algorithms as well as it's world position
 */
-struct SNode {
+struct SNode
+{
 	Vec2<> mPos;
 	int mCost;
 	int mScore;
@@ -24,7 +25,8 @@ struct SNode {
 /*
 	Tree class to store the nodes and do operations on them
 */
-class CTree {
+class CTree
+{
 	public:
 		typedef std::shared_ptr<SNode> Node;
 
@@ -45,7 +47,8 @@ class CTree {
 /*
 	Abstract class for a search algorithm
 */
-class CSearchAlgorithm {
+class CSearchAlgorithm
+{
 	public:
 		enum EStatus { Found, Searching, Failed };
 
