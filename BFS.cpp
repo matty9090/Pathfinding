@@ -25,8 +25,6 @@ int BFS::step() {
 		Tree::Node current = *open.begin();
 		open.erase(current);
 
-		//cout << "Current node: " << current->pos.toString() << "\n";
-
 		if (current == goaln) {
 			goal_found = true;
 			construct_path();
@@ -76,5 +74,5 @@ void BFS::construct_path() {
 
 		reverse(path.begin(), path.end());
 	} else
-		cout << "Could not find path :(\n\n";
+		cout << "Could not find path\n\n";
 }

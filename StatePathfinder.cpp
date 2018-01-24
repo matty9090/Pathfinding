@@ -236,7 +236,7 @@ void StatePathfinder::clearPathLine() {
 
 void StatePathfinder::writeResults(std::vector<Vec2<>> path, string ext) {
 	string map_file = settings.currentMap().map_file;
-	ofstream file("Results_" + map_file.substr(0, map_file.find_last_of('.')) + "_" + ext + ".txt");
+	ofstream file("Output_" + map_file.substr(0, map_file.find_last_of('.')) + "_" + ext + ".txt");
 
 	for (auto coord : path)
 		file << coord.toString() << endl;

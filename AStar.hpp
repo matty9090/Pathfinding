@@ -15,5 +15,4 @@ class AStar : public SearchAlgorithm {
 		bool goal_found;
 
 		void construct_path();
-		int heuristic(Tree::Node start, Tree::Node end);
 };

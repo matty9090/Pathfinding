@@ -78,8 +78,6 @@ int AStar::step() {
 			node->score = n_score;
 			node->estimate = n_score + heuristic(node, goaln);
 		}
-
-		
 	} else
 		return Failed;
 	
@@ -96,10 +94,5 @@ void AStar::construct_path() {
 
 		reverse(path.begin(), path.end());
 	} else
-		cout << "Could not find path :(\n\n";
-}
-
-// Manhattan Distance
-int AStar::heuristic(Tree::Node start, Tree::Node end) {
-	return abs(start->pos.x - end->pos.x) + abs(start->pos.y - end->pos.y);
+		cout << "Could not find path\n\n";
 }
