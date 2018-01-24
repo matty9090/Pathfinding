@@ -4,34 +4,34 @@
 
 using namespace std;
 
-Settings::Settings(string file) {
+CSettings::CSettings(string file) {
 	ifstream f(file);
-	picojson::parse(json, f);
+	picojson::parse(mJson, f);
 
-	load_properties();
-	load_models();
-	load_maps();
-	load_keys();
+	LoadProperties();
+	LoadModels();
+	LoadMaps();
+	LoadKeys();
 
 	f.close();
 
-	current_map = "Map 2";
+	mCurrentMap = "Map 2";
 }
 
-void Settings::load_properties() {
-	window_w = (size_t)json.get("window_w").get<double>();
-	window_h = (size_t)json.get("window_h").get<double>();
+void CSettings::LoadProperties() {
+	mWindowW = (size_t)mJson.get("window_w").get<double>();
+	mWindowH = (size_t)mJson.get("window_h").get<double>();
 
-	map_scale	= (float)json.get("map_scale").get<double>();
-	maps_folder	= json.get("maps_folder").get<string>();
+	mMapScale	= (float)mJson.get("map_scale").get<double>();
+	mMapsFolder	= mJson.get("maps_folder").get<string>();
 }
 
-void Settings::load_models() {
-	picojson::array model_list = json.get("models").get<picojson::array>();
+void CSettings::LoadModels() {
+	picojson::array modelList = mJson.get("models").get<picojson::array>();
 
 	cout << "Models:\n\n";
 
-	for (auto model : model_list) {
+	for (auto model : modelList) {
 		string name = model.get("name").get<string>();
 		string file = model.get("file").get<string>();
 		string tex  = "";
@@ -54,13 +54,13 @@ void Settings::load_models() {
 			float y = (float)model.get("y").get<double>();
 			float z = (float)model.get("z").get<double>();
 
-			models[name].inst = true;
-			models[name].pos  = Vec3<>(x, y, z);
+			mModels[name].mInst = true;
+			mModels[name].mPos  = Vec3<>(x, y, z);
 		}
 		
-		models[name].tex = tex;
-		models[name].file = file;
-		models[name].scale = scale;
+		mModels[name].mTex = tex;
+		mModels[name].mFile = file;
+		mModels[name].mScale = scale;
 
 		cout << "\n";
 	}
@@ -68,23 +68,23 @@ void Settings::load_models() {
 	cout << "\n";
 }
 
-void Settings::load_maps() {
-	picojson::array map_list = json.get("maps").get<picojson::array>();
+void CSettings::LoadMaps() {
+	picojson::array mapList = mJson.get("maps").get<picojson::array>();
 
 	cout << "Maps:\n\n";
 
-	for (auto model : map_list) {
+	for (auto model : mapList) {
 		string name  = model.get("name").get<string>();
 		string mfile = model.get("map_file").get<string>();
 		string cfile = model.get("coords_file").get<string>();
-		size_t map_w = (size_t)model.get("map_width").get<double>();
-		size_t map_h = (size_t)model.get("map_height").get<double>();
+		size_t mapW = (size_t)model.get("map_width").get<double>();
+		size_t mapH = (size_t)model.get("map_height").get<double>();
 
-		Vec2<size_t> dims(map_w, map_h);
+		Vec2<size_t> dims(mapW, mapH);
 
-		maps[name].map_file = mfile;
-		maps[name].coords_file = cfile;
-		maps[name].dims = dims;
+		mMaps[name].mMapFile = mfile;
+		mMaps[name].mCoordsFile = cfile;
+		mMaps[name].mDims = dims;
 
 		cout << "\t" << name << " " << dims.toString();
 		cout << " - " << mfile << ", " << cfile << "\n";
@@ -93,16 +93,16 @@ void Settings::load_maps() {
 	cout << "\n";
 }
 
-void Settings::load_keys() {
-	picojson::array keys_list = json.get("keys").get<picojson::array>();
+void CSettings::LoadKeys() {
+	picojson::array keysList = mJson.get("keys").get<picojson::array>();
 	
-	for (auto key : keys_list) {
+	for (auto key : keysList) {
 		string use = key.get("use").get<string>();
 		string txt = key.get("txt").get<string>();
 		tle::EKeyCode code = (tle::EKeyCode)((int)key.get("code").get<double>());
 
 		string desc = use + ": " + txt;
 
-		keys[use] = { desc, code };
+		mKeys[use] = { desc, code };
 	}
 }

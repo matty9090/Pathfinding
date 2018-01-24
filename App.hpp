@@ -8,19 +8,19 @@
 #include "State.hpp"
 #include "Settings.hpp"
 
-class App {
+class CApp {
 	public:
-		App(Settings &settings);
-		~App();
+		CApp(CSettings &settings);
+		~CApp();
 
 		void run();
 
 	private:
-		int state;
-		std::vector<std::unique_ptr<State>> states;
+		int mState;
+		std::vector<std::unique_ptr<CState>> mStates;
 
-		Settings &settings;
-		tle::I3DEngine *eng;
+		CSettings &mSettings;
+		tle::I3DEngine *mEng;
 
-		std::map<string, tle::IModel*> models;
+		std::map<string, tle::IModel*> mModels;
 };

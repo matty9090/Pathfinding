@@ -6,150 +6,150 @@
 
 using namespace tle;
 
-StatePathfinder::StatePathfinder(tle::I3DEngine *engine, Settings &settings)
-	: State(engine, settings), map(*this), tree(settings.currentMap().dims, map.map)
+CStatePathfinder::CStatePathfinder(tle::I3DEngine *engine, CSettings &settings)
+	: CState(engine, settings), mMap(*this), mTree(settings.getCurrentMap().mDims, mMap.mMapData)
 {
-	node_types[0] = make_pair("Wall", 0);
-	node_types[1] = make_pair("Clear", 1);
-	node_types[2] = make_pair("Wood", 2);
-	node_types[3] = make_pair("Water", 3);
+	mNodeTypes[0] = make_pair("Wall", 0);
+	mNodeTypes[1] = make_pair("Clear", 1);
+	mNodeTypes[2] = make_pair("Wood", 2);
+	mNodeTypes[3] = make_pair("Water", 3);
 }
 
-void StatePathfinder::init() {
-	pathNum = 0;
-	timer   = 0.f;
-	bezier  = true;
-	useDiag = false;
-	a_found = true, b_found = true;
+void CStatePathfinder::Init() {
+	mPathNum = 0;
+	mTimer   = 0.f;
+	mBezier  = true;
+	mUseDiag = false;
+	mFoundA = true, mFoundB = true;
 
-	for (auto key : settings.getKeys())
-		key_list += key.second.desc + "  /  ";
+	for (auto key : mSettings.GetKeys())
+		mKeyList += key.second.mDesc + "  /  ";
 
-	key_list = key_list.substr(0, key_list.length() - 5);
+	mKeyList = mKeyList.substr(0, mKeyList.length() - 5);
 
-	cam = engine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
-	font = engine->LoadFont("res/Arial.ttf", 24U);
+	mpCam = mpEngine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
+	mpFont = mpEngine->LoadFont("res/Arial.ttf", 24U);
 
-	load_maps();
-	load_models();
+	LoadMaps();
+	LoadModels();
 
-	scale = settings.getMapScale();
-	origin = Vec3<>(scale / 2.0f - (((float)dims.x * scale) / 2.0f), 12.0f, 10.0f);
-	alg = AlgAStar;
+	mScale = mSettings.GetMapScale();
+	mOrigin = Vec3<>(mScale / 2.0f - (((float)mDims.x * mScale) / 2.0f), 12.0f, 10.0f);
+	mAlg = AlgAStar;
 
-	map.constructMap(origin, scale);
+	mMap.constructMap(mOrigin, mScale);
 }
 
-int StatePathfinder::run() {
-	while (engine->IsRunning()) {
-		handleInput();
+int CStatePathfinder::Run() {
+	while (mpEngine->IsRunning()) {
+		HandleInput();
 
-		if (engine->KeyHit(settings.getKeyCode("Main Menu"))) {
-			cleanup();
-			return State::Menu;
+		if (mpEngine->KeyHit(mSettings.GetKeyCode("Main Menu"))) {
+			Cleanup();
+			return CState::Menu;
 		}
 
-		timer -= engine->Timer();
+		mTimer -= mpEngine->Timer();
 
-		if (timer < 0.0f) {
-			timer = 0.07f;
+		if (mTimer < 0.0f) {
+			mTimer = 0.07f;
 
-			if (!a_found) {
-				int r = a_searcher->step();
+			if (!mFoundA) {
+				int r = mSearcherA->Step();
 
-				if (r == SearchAlgorithm::Found) {
-					a_found = true;
+				if (r == CSearchAlgorithm::Found) {
+					mFoundA = true;
 
-					if (bezier)
-						displayPathBezier(a_searcher->getPath(), "Path_AS");
+					if (mBezier)
+						DisplayPathBezier(mSearcherA->GetPath(), "Path_AS");
 					else
-						displayPathCatmullRom(a_searcher->getPath(), "Path_AS");
+						DisplayPathCatmullRom(mSearcherA->GetPath(), "Path_AS");
 
-					writeResults(a_searcher->getPath(), "AS", a_searcher->GetNumSearches());
+					WriteResults(mSearcherA->GetPath(), "AS", mSearcherA->GetNumSearches());
 
 				} else
-					displayPathSearch(a_searcher->getOpenList(), a_searcher->getClosedList(), "_AS");
+					DisplayPathSearch(mSearcherA->GetOpenList(), mSearcherA->GetClosedList(), "_AS");
 			}
 
-			if (!b_found) {
-				int r = b_searcher->step();
+			if (!mFoundB) {
+				int r = mSearcherB->Step();
 
-				if (r == SearchAlgorithm::Found) {
-					b_found = true;
+				if (r == CSearchAlgorithm::Found) {
+					mFoundB = true;
 
-					if (bezier)
-						displayPathBezier(b_searcher->getPath(), "Path_BFS");
+					if (mBezier)
+						DisplayPathBezier(mSearcherB->GetPath(), "Path_BFS");
 					else
-						displayPathCatmullRom(b_searcher->getPath(), "Path_BFS");
+						DisplayPathCatmullRom(mSearcherB->GetPath(), "Path_BFS");
 
-					writeResults(b_searcher->getPath(), "BFS", b_searcher->GetNumSearches());
+					WriteResults(mSearcherB->GetPath(), "BFS", mSearcherB->GetNumSearches());
 				} else
-					displayPathSearch(b_searcher->getOpenList(), b_searcher->getClosedList(), "_BFS");
+					DisplayPathSearch(mSearcherB->GetOpenList(), mSearcherB->GetClosedList(), "_BFS");
 			}
 		}
 
-		displayGUI();
-		engine->DrawScene();
+		DisplayGUI();
+		mpEngine->DrawScene();
 	}
 
-	cleanup();
+	Cleanup();
 
-	return State::Exit;
+	return CState::Exit;
 }
 
-void StatePathfinder::load_maps() {
-	Settings::Map cur_map = settings.currentMap();
-	MapLoader loader;
+void CStatePathfinder::LoadMaps() {
+	CSettings::SMap curMap = mSettings.getCurrentMap();
+	CMapLoader loader;
 	pair<Vec2<>, Vec2<>> coords;
 
-	dims = cur_map.dims;
-	loader.setDims(dims.x, dims.y);
+	mDims = curMap.mDims;
+	loader.SetDims(mDims.x, mDims.y);
 
-	auto m = loader.load(settings.getMapsFolder() + cur_map.map_file);
-	coords = loader.coords(settings.getMapsFolder() + cur_map.coords_file);
+	auto m = loader.Load(mSettings.GetMapsFolder() + curMap.mMapFile);
+	coords = loader.Coords(mSettings.GetMapsFolder() + curMap.mCoordsFile);
 
-	map.map.resize(dims.y);
+	mMap.mMapData.resize(mDims.y);
 
-	for (unsigned y = 0; y < dims.y; ++y)
-		map.map[y].resize(dims.x);
+	for (unsigned y = 0; y < mDims.y; ++y)
+		mMap.mMapData[y].resize(mDims.x);
 
-	for (unsigned y = 0; y < dims.y; ++y)
-		for (unsigned x = 0; x < dims.x; ++x)
-			map.map[y][x] = tree.setNode(x, y, Vec2<>(x, y), m[y][x]);
+	for (unsigned y = 0; y < mDims.y; ++y)
+		for (unsigned x = 0; x < mDims.x; ++x)
+			mMap.mMapData[y][x] = mTree.SetNode(x, y, Vec2<>(x, y), m[y][x]);
 
-	start = tree.findNode(coords.first), goal = tree.findNode(coords.second);
+	mStart = mTree.FindNode(coords.first), mGoal = mTree.FindNode(coords.second);
 }
 
-void StatePathfinder::load_models() {
-	auto mesh_list = settings.getModels();
+void CStatePathfinder::LoadModels() {
+	auto meshList = mSettings.GetModels();
 
-	for (auto mesh : mesh_list) {
-		meshes[mesh.first] = engine->LoadMesh(mesh.second.file);
+	for (auto mesh : meshList) {
+		mMeshes[mesh.first] = mpEngine->LoadMesh(mesh.second.mFile);
 
-		if (mesh.second.inst) {
-			models[mesh.first] = meshes[mesh.first]->CreateModel(mesh.second.pos.x, mesh.second.pos.y, mesh.second.pos.z);
+		if (mesh.second.mInst) {
+			mModels[mesh.first] = mMeshes[mesh.first]->CreateModel(mesh.second.mPos.x, mesh.second.mPos.y, mesh.second.mPos.z);
 
-			if(!mesh.second.tex.empty())
-				models[mesh.first]->SetSkin(mesh.second.tex);
+			if(!mesh.second.mTex.empty())
+				mModels[mesh.first]->SetSkin(mesh.second.mTex);
 		}
 	}
 
-	assert(meshes.find("Clear") != meshes.end());
-	assert(meshes.find("Wood")  != meshes.end());
-	assert(meshes.find("Water") != meshes.end());
-	assert(meshes.find("Wall")  != meshes.end());
+	assert(mMeshes.find("Clear") != mMeshes.end());
+	assert(mMeshes.find("Wood")  != mMeshes.end());
+	assert(mMeshes.find("Water") != mMeshes.end());
+	assert(mMeshes.find("Wall")  != mMeshes.end());
 
-	cam->RotateX(50.0f);
+	mpCam->RotateX(50.0f);
 }
 
-void StatePathfinder::free_memory() {
-	for (unsigned y = 0; y < dims.y; ++y)
-		map.map[y].clear();
+void CStatePathfinder::FreeMemory() {
+	for (unsigned y = 0; y < mDims.y; ++y)
+		mMap.mMapData[y].clear();
 
-	map.map.clear();
+	mMap.mMapData.clear();
 }
 
-float StatePathfinder::cspline(float p1, float p2, float p3, float p4, float t) {
+float CStatePathfinder::cspline(float p1, float p2, float p3, float p4, float t) {
 	float a = -p1 + 3 * p2 - 3 * p3 + p4;
 	float b = 2 * p1 - 5 * p2 + 4 * p3 - p4;
 	float c = p3 - p1;
@@ -158,85 +158,85 @@ float StatePathfinder::cspline(float p1, float p2, float p3, float p4, float t) 
 	return (a * t * t * t + b * t * t + c * t + d) / 2.0f;
 }
 
-float StatePathfinder::bspline(float p1, float p2, float p3, float p4, float t) {
+float CStatePathfinder::bspline(float p1, float p2, float p3, float p4, float t) {
 	return powf(1 - t, 3) * p1 + 3 * t * powf(1 - t, 2) * p2 + 3 * t * t * (1 - t) * p3 + t * t * t * p4;
 }
 
-float StatePathfinder::lerp(float v0, float v1, float t) {
+float CStatePathfinder::lerp(float v0, float v1, float t) {
 	return (1 - t) * v0 + t * v1;
 }
 
-void StatePathfinder::handleInput() {
-	if (engine->KeyHit(Key_Escape))
-		engine->Stop();
+void CStatePathfinder::HandleInput() {
+	if (mpEngine->KeyHit(Key_Escape))
+		mpEngine->Stop();
 
-	if (engine->KeyHit(settings.getKeyCode("Start"))) {
-		clearPathSearch();
-		clearPathLine();
+	if (mpEngine->KeyHit(mSettings.GetKeyCode("Start"))) {
+		ClearPathSearch();
+		ClearPathLine();
 
-		a_found = true, b_found = true;
-		pathNum = 0;
-		timer = 0.0f;
+		mFoundA = true, mFoundB = true;
+		mPathNum = 0;
+		mTimer = 0.0f;
 
-		if (alg == AlgAStar) a_found = false;
-		if (alg == AlgBfs)   b_found = false;
-		if (alg == AlgBoth)  a_found = false, b_found = false;
+		if (mAlg == AlgAStar) mFoundA = false;
+		if (mAlg == AlgBfs)   mFoundB = false;
+		if (mAlg == AlgBoth)  mFoundA = false, mFoundB = false;
 
-		a_searcher = make_shared<AStar>(tree);
-		b_searcher = make_shared<BFS>(tree);
+		mSearcherA = make_shared<CAStar>(mTree);
+		mSearcherB = make_shared<CBFS>(mTree);
 
-		a_searcher->useDiagonals(useDiag);
-		a_searcher->start(start, goal);
+		mSearcherA->UseDiagonals(mUseDiag);
+		mSearcherA->Start(mStart, mGoal);
 
-		b_searcher->useDiagonals(useDiag);
-		b_searcher->start(start, goal);
+		mSearcherB->UseDiagonals(mUseDiag);
+		mSearcherB->Start(mStart, mGoal);
 	}
 
-	if (a_found && b_found && engine->KeyHit(settings.getKeyCode("Clear"))) {
-		clearPathSearch();
-		clearPathLine();
+	if (mFoundA && mFoundB && mpEngine->KeyHit(mSettings.GetKeyCode("Clear"))) {
+		ClearPathSearch();
+		ClearPathLine();
 	}
 
-	if (engine->KeyHit(settings.getKeyCode("Switch Algorithm")))
-		alg = (alg + 1) % 3;
+	if (mpEngine->KeyHit(mSettings.GetKeyCode("Switch Algorithm")))
+		mAlg = (mAlg + 1) % 3;
 
-	if (engine->KeyHit(settings.getKeyCode("Diagonals")))
-		useDiag = !useDiag;
+	if (mpEngine->KeyHit(mSettings.GetKeyCode("Diagonals")))
+		mUseDiag = !mUseDiag;
 
-	if (engine->KeyHit(settings.getKeyCode("Curve Type")))
-		bezier = !bezier;
+	if (mpEngine->KeyHit(mSettings.GetKeyCode("Curve Type")))
+		mBezier = !mBezier;
 }
 
-void StatePathfinder::displayGUI() {
-	string alg_str = (alg == AlgBfs) ? "Breadth-First" : ((alg == AlgAStar) ? "A*" : "BFS + A*");
-	string diag_str = (useDiag ? "On" : "Off");
-	string curv_str = (bezier ? "Bezier" : "Catmul-Rom");
+void CStatePathfinder::DisplayGUI() {
+	string algStr = (mAlg == AlgBfs) ? "Breadth-First" : ((mAlg == AlgAStar) ? "A*" : "BFS + A*");
+	string diagStr = (mUseDiag ? "On" : "Off");
+	string curvStr = (mBezier ? "Bezier" : "Catmul-Rom");
 
-	font->Draw(key_list, 10, 10, kWhite);
-	font->Draw("Diagonals: " + diag_str + "  /  " + "Curve: " + curv_str + "  /  " + "Algorithm: " + alg_str, 10, 34, kLightGrey);
+	mpFont->Draw(mKeyList, 10, 10, kWhite);
+	mpFont->Draw("Diagonals: " + diagStr + "  /  " + "Curve: " + curvStr + "  /  " + "Algorithm: " + algStr, 10, 34, kLightGrey);
 }
 
-void StatePathfinder::clearPathSearch() {
-	for (auto &i : search_path)
+void CStatePathfinder::ClearPathSearch() {
+	for (auto &i : mSearchPath)
 		i->GetMesh()->RemoveModel(i);
 
-	search_path.clear();
+	mSearchPath.clear();
 }
 
-void StatePathfinder::clearPathLine() {
-	for (unsigned i = 0; i < path.size(); i++) {
-		for (auto &node : path[i])
+void CStatePathfinder::ClearPathLine() {
+	for (unsigned i = 0; i < mPath.size(); i++) {
+		for (auto &node : mPath[i])
 			node->GetMesh()->RemoveModel(node);
 
-		path[i].clear();
+		mPath[i].clear();
 	}
 
-	path.clear();
+	mPath.clear();
 }
 
-void StatePathfinder::writeResults(std::vector<Vec2<>> path, string ext, int searches) {
-	string map_file = settings.currentMap().map_file;
-	ofstream file("Output_" + map_file.substr(0, map_file.find_last_of('.')) + "_" + ext + ".txt");
+void CStatePathfinder::WriteResults(std::vector<Vec2<>> path, string ext, int searches) {
+	string mapFile = mSettings.getCurrentMap().mMapFile;
+	ofstream file("Output_" + mapFile.substr(0, mapFile.find_last_of('.')) + "_" + ext + ".txt");
 
 	for (auto coord : path)
 		file << coord.toString() << endl;
@@ -246,27 +246,27 @@ void StatePathfinder::writeResults(std::vector<Vec2<>> path, string ext, int sea
 	file.close();
 }
 
-void StatePathfinder::displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed, string id) {
+void CStatePathfinder::DisplayPathSearch(std::set<CTree::Node> open, std::set<CTree::Node> closed, string id) {
 	for (auto &node : open) {
-		int x = node->pos.x, y = node->pos.y;
+		int x = node->mPos.x, y = node->mPos.y;
 
-		search_path.push_back(meshes["OpenList" + id]->CreateModel(x * scale + origin.x, origin.y + 5.0f, y * scale + origin.z));
-		search_path.back()->SetSkin(settings.getModels()["OpenList" + id].tex);
-		search_path.back()->Scale(settings.getModels()["OpenList" + id].scale);
+		mSearchPath.push_back(mMeshes["OpenList" + id]->CreateModel(x * mScale + mOrigin.x, mOrigin.y + 5.0f, y * mScale + mOrigin.z));
+		mSearchPath.back()->SetSkin(mSettings.GetModels()["OpenList" + id].mTex);
+		mSearchPath.back()->Scale(mSettings.GetModels()["OpenList" + id].mScale);
 	}
 
 	for (auto &node : closed) {
-		int x = node->pos.x, y = node->pos.y;
+		int x = node->mPos.x, y = node->mPos.y;
 
-		search_path.push_back(meshes["ClosedList" + id]->CreateModel(x * scale + origin.x, origin.y + 5.0f, y * scale + origin.z));
-		search_path.back()->SetSkin(settings.getModels()["ClosedList" + id].tex);
-		search_path.back()->Scale(settings.getModels()["ClosedList" + id].scale);
+		mSearchPath.push_back(mMeshes["ClosedList" + id]->CreateModel(x * mScale + mOrigin.x, mOrigin.y + 5.0f, y * mScale + mOrigin.z));
+		mSearchPath.back()->SetSkin(mSettings.GetModels()["ClosedList" + id].mTex);
+		mSearchPath.back()->Scale(mSettings.GetModels()["ClosedList" + id].mScale);
 	}
 }
 
-void StatePathfinder::displayPathBezier(std::vector<Vec2<>> p, string id) {
+void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 	if (!p.empty()) {
-		path.resize(++pathNum);
+		mPath.resize(++mPathNum);
 		
 		int steps = 30;
 
@@ -275,41 +275,41 @@ void StatePathfinder::displayPathBezier(std::vector<Vec2<>> p, string id) {
 			Vec2<> pm = p[i];
 			Vec2<> pf = (i < p.size() - 1) ? p[i + 1] : p.back();
 
-			Vec2<float> dir_a = Vec2<float>((float)pm.x, (float)pm.y) - Vec2<float>((float)ps.x, (float)ps.y);
-			Vec2<float> dir_b = Vec2<float>((float)pf.x, (float)pf.y) - Vec2<float>((float)pm.x, (float)pm.y);
+			Vec2<float> dirA = Vec2<float>((float)pm.x, (float)pm.y) - Vec2<float>((float)ps.x, (float)ps.y);
+			Vec2<float> dirB = Vec2<float>((float)pf.x, (float)pf.y) - Vec2<float>((float)pm.x, (float)pm.y);
 
 			// Corner ahead
 			if (ps.x != pf.x && ps.y != pf.y) {
-				Vec2<float> p1 = Vec2<float>((float)ps.x, (float)ps.y) + dir_a / 2.0f;
+				Vec2<float> p1 = Vec2<float>((float)ps.x, (float)ps.y) + dirA / 2.0f;
 				Vec2<float> p2((float)pm.x, (float)pm.y);
-				Vec2<float> p3 = p2 + dir_b / 2.0f;
+				Vec2<float> p3 = p2 + dirB / 2.0f;
 				Vec2<float> p4 = p3;
 
 				for (int n = 0; n < steps; n++) {
 					float cx = bspline(p1.x, p2.x, p3.x, p4.x, (float)n / (float)steps);
 					float cy = bspline(p1.y, p2.y, p3.y, p4.y, (float)n / (float)steps);
 
-					path[pathNum - 1].push_back(meshes[id]->CreateModel(cx * scale + origin.x, origin.y + 5.0f + (pathNum), cy * scale + origin.z));
-					path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
-					path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
+					mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + 5.0f + (mPathNum), cy * mScale + mOrigin.z));
+					mPath[mPathNum - 1].back()->SetSkin(mSettings.GetModels()[id].mTex);
+					mPath[mPathNum - 1].back()->Scale(mSettings.GetModels()[id].mScale);
 				}
 			} else {
 				for (int n = 0; n < steps; n++) {
-					float cx = lerp(pm.x - dir_a.x / 2.0f, pm.x + dir_b.x / 2.0f, (float)n / (float)steps);
-					float cy = lerp(pm.y - dir_a.y / 2.0f, pm.y + dir_b.y / 2.0f, (float)n / (float)steps);
+					float cx = lerp(pm.x - dirA.x / 2.0f, pm.x + dirB.x / 2.0f, (float)n / (float)steps);
+					float cy = lerp(pm.y - dirA.y / 2.0f, pm.y + dirB.y / 2.0f, (float)n / (float)steps);
 
-					path[pathNum - 1].push_back(meshes[id]->CreateModel(cx * scale + origin.x, origin.y + 5.0f + (pathNum), cy * scale + origin.z));
-					path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
-					path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
+					mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + 5.0f + (mPathNum), cy * mScale + mOrigin.z));
+					mPath[mPathNum - 1].back()->SetSkin(mSettings.GetModels()[id].mTex);
+					mPath[mPathNum - 1].back()->Scale(mSettings.GetModels()[id].mScale);
 				}
 			}
 		}
 	}
 }
 
-void StatePathfinder::displayPathCatmullRom(std::vector<Vec2<>> p, string id) {
+void CStatePathfinder::DisplayPathCatmullRom(std::vector<Vec2<>> p, string id) {
 	if (!p.empty()) {
-		path.resize(++pathNum);
+		mPath.resize(++mPathNum);
 
 		int steps = 14;
 
@@ -323,45 +323,45 @@ void StatePathfinder::displayPathCatmullRom(std::vector<Vec2<>> p, string id) {
 				float cx = cspline((float)p1.x, (float)p2.x, (float)p3.x, (float)p4.x, (float)i / (float)steps);
 				float cy = cspline((float)p1.y, (float)p2.y, (float)p3.y, (float)p4.y, (float)i / (float)steps);
 
-				path[pathNum - 1].push_back(meshes[id]->CreateModel(cx * scale + origin.x, origin.y + 5.0f + (pathNum), cy * scale + origin.z));
-				path[pathNum - 1].back()->SetSkin(settings.getModels()[id].tex);
-				path[pathNum - 1].back()->Scale(settings.getModels()[id].scale);
+				mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + 5.0f + (mPathNum), cy * mScale + mOrigin.z));
+				mPath[mPathNum - 1].back()->SetSkin(mSettings.GetModels()[id].mTex);
+				mPath[mPathNum - 1].back()->Scale(mSettings.GetModels()[id].mScale);
 			}
 		}
 	}
 }
 
-void StatePathfinder::cleanup() {
-	clearPathSearch();
-	clearPathLine();
+void CStatePathfinder::Cleanup() {
+	ClearPathSearch();
+	ClearPathLine();
 
-	for (auto mesh : meshes)
-		engine->RemoveMesh(mesh.second);
+	for (auto mesh : mMeshes)
+		mpEngine->RemoveMesh(mesh.second);
 
-	key_list = "";
-	engine->RemoveFont(font);
+	mKeyList = "";
+	mpEngine->RemoveFont(mpFont);
 }
 
-void StatePathfinder::NodeMap::constructMap(Vec3<> origin, float scale) {
-	models.resize(parent.dims.y);
+void CStatePathfinder::SNodeMap::constructMap(Vec3<> origin, float scale) {
+	mModels.resize(mParent.mDims.y);
 
-	for (unsigned y = 0; y < parent.dims.y; ++y)
-		models[y].resize(parent.dims.x);
+	for (unsigned y = 0; y < mParent.mDims.y; ++y)
+		mModels[y].resize(mParent.mDims.x);
 
-	for (unsigned y = 0; y < parent.dims.y; ++y) {
-		for (unsigned x = 0; x < parent.dims.y; ++x) {
-			string type = parent.node_types[map[y][x]->cost].first;
+	for (unsigned y = 0; y < mParent.mDims.y; ++y) {
+		for (unsigned x = 0; x < mParent.mDims.y; ++x) {
+			string type = mParent.mNodeTypes[mMapData[y][x]->mCost].first;
 			Vec3<> v = translate(Vec2<>(x, y), origin, scale);
 
-			models[y][x] = parent.meshes[type]->CreateModel(v.x, v.y, v.z);
-			models[y][x]->Scale(parent.settings.getModels()[type].scale);
+			mModels[y][x] = mParent.mMeshes[type]->CreateModel(v.x, v.y, v.z);
+			mModels[y][x]->Scale(mParent.mSettings.GetModels()[type].mScale);
 
-			if(!parent.settings.getModels()[type].tex.empty())
-				models[y][x]->SetSkin(parent.settings.getModels()[type].tex);
+			if(!mParent.mSettings.GetModels()[type].mTex.empty())
+				mModels[y][x]->SetSkin(mParent.mSettings.GetModels()[type].mTex);
 		}
 	}
 }
 
-Vec3<> StatePathfinder::NodeMap::translate(Vec2<> coord, Vec3<> &origin, float scale) {
+Vec3<> CStatePathfinder::SNodeMap::translate(Vec2<> coord, Vec3<> &origin, float scale) {
 	return Vec3<>(coord.x * scale + origin.x, origin.y, coord.y * scale + origin.z);
 }

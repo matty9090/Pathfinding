@@ -2,61 +2,61 @@
 
 using namespace tle;
 
-StateMenu::StateMenu(tle::I3DEngine *engine, Settings &settings) : State(engine, settings) {
+CStateMenu::CStateMenu(tle::I3DEngine *engine, CSettings &settings) : CState(engine, settings) {
 	
 }
 
-void StateMenu::init() {
-	font		= engine->LoadFont("res/HoboStd.otf", 46U);
-	spr_logo	= engine->CreateSprite("res/logo.png", 314.0f, 76.0f);
-	spr_bg		= engine->CreateSprite("res/bg.jpg");
+void CStateMenu::Init() {
+	mpFont		= mpEngine->LoadFont("res/HoboStd.otf", 46U);
+	mpSprLogo	= mpEngine->CreateSprite("res/logo.png", 314.0f, 76.0f);
+	mpSprBg		= mpEngine->CreateSprite("res/bg.jpg");
 
-	items[0] = { "Choose map", &StateMenu::action_select };
-	items[1] = { "Exit", &StateMenu::action_exit };
+	mItems[0] = { "Choose map", &CStateMenu::ActionSelect };
+	mItems[1] = { "Exit", &CStateMenu::ActionExit };
 
-	selected = 0;
+	mSelected = 0;
 	
 	int i = 0;
 
-	for (auto &item : items) {
-		item.second.pos = Vec2<>(512, i * 56 + 380);
+	for (auto &item : mItems) {
+		item.second.mPos = Vec2<>(512, i * 56 + 380);
 		++i;
 	}
 
-	state_change = false;
-	return_state = State::Exit;
+	mStateChange = false;
+	mReturnState = CState::Exit;
 }
 
-int StateMenu::run() {
-	while (engine->IsRunning() && !state_change) {
-		if (engine->KeyHit(Key_Escape)) {
-			engine->Stop();
+int CStateMenu::Run() {
+	while (mpEngine->IsRunning() && !mStateChange) {
+		if (mpEngine->KeyHit(Key_Escape)) {
+			mpEngine->Stop();
 			break;
 		}
 
-		if (engine->KeyHit(Key_Down)) selected = (selected + 1) % items.size();
-		if (engine->KeyHit(Key_Up)) selected = (selected - 1) % items.size();
-		if (engine->KeyHit(Key_Return)) ((*this).*items[selected].action)();
+		if (mpEngine->KeyHit(Key_Down)) mSelected = (mSelected + 1) % mItems.size();
+		if (mpEngine->KeyHit(Key_Up)) mSelected = (mSelected - 1) % mItems.size();
+		if (mpEngine->KeyHit(Key_Return)) ((*this).*mItems[mSelected].mAction)();
 
-		for (auto &item : items)
-			font->Draw(item.second.txt, item.second.pos.x, item.second.pos.y, (item.first == selected) ? kBlue : kBlack, kCentre, kVCentre);
+		for (auto &item : mItems)
+			mpFont->Draw(item.second.mTxt, item.second.mPos.x, item.second.mPos.y, (item.first == mSelected) ? kBlue : kBlack, kCentre, kVCentre);
 
-		engine->DrawScene();
+		mpEngine->DrawScene();
 	}
 
-	engine->RemoveFont(font);
-	engine->RemoveSprite(spr_logo);
-	engine->RemoveSprite(spr_bg);
+	mpEngine->RemoveFont(mpFont);
+	mpEngine->RemoveSprite(mpSprLogo);
+	mpEngine->RemoveSprite(mpSprBg);
 
-	return return_state;
+	return mReturnState;
 }
 
-void StateMenu::action_select() {
-	state_change = true;
-	return_state = State::MapChooser;
+void CStateMenu::ActionSelect() {
+	mStateChange = true;
+	mReturnState = CState::MapChooser;
 }
 
-void StateMenu::action_exit() {
-	state_change = true;
-	return_state = State::Exit;
+void CStateMenu::ActionExit() {
+	mStateChange = true;
+	mReturnState = CState::Exit;
 }

@@ -3,60 +3,60 @@
 
 using namespace tle;
 
-StateMapChooser::StateMapChooser(tle::I3DEngine *engine, Settings &settings) : State(engine, settings) {
+CStateMapChooser::CStateMapChooser(tle::I3DEngine *engine, CSettings &settings) : CState(engine, settings) {
 	
 }
 
-void StateMapChooser::init() {
-	font		= engine->LoadFont("res/HoboStd.otf", 46U);
-	spr_logo	= engine->CreateSprite("res/logo.png", 314.0f, 76.0f);
-	spr_bg		= engine->CreateSprite("res/bg.jpg");
+void CStateMapChooser::Init() {
+	mpFont			= mpEngine->LoadFont("res/HoboStd.otf", 46U);
+	mpSpriteLogo	= mpEngine->CreateSprite("res/logo.png", 314.0f, 76.0f);
+	mpSprBg			= mpEngine->CreateSprite("res/bg.jpg");
 
 	int count = 0;
 
-	for (auto map : settings.getMaps()) {
-		items[count] = { "Map " + to_string(count + 1), count };
+	for (auto map : mSettings.GetMaps()) {
+		mItems[count] = { "Map " + to_string(count + 1), count };
 		++count;
 	}
 
-	selected = 0;
+	mSelected = 0;
 	
 	int i = 0;
 
-	for (auto &item : items) {
-		item.second.pos = Vec2<>(512, i * 56 + 380);
+	for (auto &item : mItems) {
+		item.second.mPos = Vec2<>(512, i * 56 + 380);
 		++i;
 	}
 
-	state_change = false;
-	return_state = State::Exit;
+	mStateChange = false;
+	mReturnState = CState::Exit;
 }
 
-int StateMapChooser::run() {
-	while (engine->IsRunning() && !state_change) {
-		if (engine->KeyHit(Key_Escape)) {
-			engine->Stop();
+int CStateMapChooser::Run() {
+	while (mpEngine->IsRunning() && !mStateChange) {
+		if (mpEngine->KeyHit(Key_Escape)) {
+			mpEngine->Stop();
 			break;
 		}
 
-		if (engine->KeyHit(Key_Down)) selected = (selected + 1) % items.size();
-		if (engine->KeyHit(Key_Up)) selected = (selected - 1) % items.size();
+		if (mpEngine->KeyHit(Key_Down)) mSelected = (mSelected + 1) % mItems.size();
+		if (mpEngine->KeyHit(Key_Up)) mSelected = (mSelected - 1) % mItems.size();
 
-		if (engine->KeyHit(Key_Return)) {
-			settings.setMap(items[selected].txt);
-			return_state = State::Pathfinder;
-			state_change = true;
+		if (mpEngine->KeyHit(Key_Return)) {
+			mSettings.SetMap(mItems[mSelected].mTxt);
+			mReturnState = CState::Pathfinder;
+			mStateChange = true;
 		}
 
-		for (auto &item : items)
-			font->Draw(item.second.txt, item.second.pos.x, item.second.pos.y, (item.first == selected) ? kBlue : kBlack, kCentre, kVCentre);
+		for (auto &item : mItems)
+			mpFont->Draw(item.second.mTxt, item.second.mPos.x, item.second.mPos.y, (item.first == mSelected) ? kBlue : kBlack, kCentre, kVCentre);
 
-		engine->DrawScene();
+		mpEngine->DrawScene();
 	}
 
-	engine->RemoveFont(font);
-	engine->RemoveSprite(spr_logo);
-	engine->RemoveSprite(spr_bg);
+	mpEngine->RemoveFont(mpFont);
+	mpEngine->RemoveSprite(mpSpriteLogo);
+	mpEngine->RemoveSprite(mpSprBg);
 
-	return return_state;
+	return mReturnState;
 }

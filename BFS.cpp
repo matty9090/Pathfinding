@@ -4,79 +4,79 @@
 
 using namespace std;
 
-BFS::BFS(Tree &tree) : SearchAlgorithm(tree) {
+CBFS::CBFS(CTree &tree) : CSearchAlgorithm(tree) {
 
 }
 
-void BFS::start(Tree::Node _start, Tree::Node _goal) {
-	startn = _start;
-	goaln = _goal;
+void CBFS::Start(CTree::Node _start, CTree::Node _goal) {
+	mStartNode = _start;
+	mGoalNode = _goal;
 
 	mNumSearches = 0;
 
-	goal_found = false;
+	mGoalFound = false;
 
-	open.insert(startn);
+	mOpenList.insert(mStartNode);
 
-	cout << "Starting at (" << startn->pos.x << ", " << startn->pos.y << ")\n";
-	cout << "Finding (" << goaln->pos.x << ", " << goaln->pos.y << ")\n\n";
+	cout << "Starting at (" << mStartNode->mPos.x << ", " << mStartNode->mPos.y << ")\n";
+	cout << "Finding (" << mGoalNode->mPos.x << ", " << mGoalNode->mPos.y << ")\n\n";
 }
 
-int BFS::step() {
-	if (!open.empty()) {
+int CBFS::Step() {
+	if (!mOpenList.empty()) {
 		mNumSearches++;
 
-		Tree::Node current = *open.begin();
-		open.erase(current);
+		CTree::Node current = *mOpenList.begin();
+		mOpenList.erase(current);
 
-		if (current == goaln) {
-			goal_found = true;
-			construct_path();
+		if (current == mGoalNode) {
+			mGoalFound = true;
+			mConstructPath();
 			return Found;
 		}
 
-		std::vector<Tree::Node> next;
+		std::vector<CTree::Node> next;
 
-		next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x, current->pos.y + 1)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x, current->pos.y - 1)));
+		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x + 1, current->mPos.y)));
+		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y)));
+		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x, current->mPos.y + 1)));
+		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x, current->mPos.y - 1)));
 
-		if (useDiag) {
-			next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y + 1)));
-			next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y - 1)));
-			next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y + 1)));
-			next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y - 1)));
+		if (mUseDiag) {
+			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x + 1, current->mPos.y + 1)));
+			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y - 1)));
+			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y + 1)));
+			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x + 1, current->mPos.y - 1)));
 		}
 
 		for (auto node : next) {
-			if (node == nullptr || node->cost <= 0 || closed.find(node) != closed.end())
+			if (node == nullptr || node->mCost <= 0 || mClosedList.find(node) != mClosedList.end())
 				continue;
 
-			if (open.find(node) == open.end()) {
-				data[node] = current;
-				open.insert(node);
+			if (mOpenList.find(node) == mOpenList.end()) {
+				mData[node] = current;
+				mOpenList.insert(node);
 			}
 		}
 
-		closed.insert(current);
+		mClosedList.insert(current);
 	} else
 		return Failed;
 	
 	return Searching;
 }
 
-void BFS::construct_path() {
-	if (goal_found) {
-		Tree::Node n = goaln;
-		path.push_back(n->pos);
+void CBFS::mConstructPath() {
+	if (mGoalFound) {
+		CTree::Node n = mGoalNode;
+		mPath.push_back(n->mPos);
 
-		while (n = data[n]) {
-			path.push_back(n->pos);
-			cout << n->pos.toString() << endl;
+		while (n = mData[n]) {
+			mPath.push_back(n->mPos);
+			cout << n->mPos.toString() << endl;
 		}
 
-		reverse(path.begin(), path.end());
+		reverse(mPath.begin(), mPath.end());
 	} else
 		cout << "Could not find path\n\n";
 }

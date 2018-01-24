@@ -4,83 +4,83 @@
 
 using namespace std;
 
-AStar::AStar(Tree &tree) : SearchAlgorithm(tree) {
+CAStar::CAStar(CTree &tree) : CSearchAlgorithm(tree) {
 
 }
 
-void AStar::start(Tree::Node _start, Tree::Node _goal) {
-	startn = _start;
-	goaln = _goal;
+void CAStar::Start(CTree::Node _start, CTree::Node _goal) {
+	mStartNode = _start;
+	mGoalNode = _goal;
 
 	mNumSearches = 0;
 
-	for (unsigned y = 0; y < tree.getGridSize().y; y++) {
-		for (unsigned x = 0; x < tree.getGridSize().x; x++) {
-			tree.getNode(x, y)->score = 10000;
-			tree.getNode(x, y)->estimate = 10000;
+	for (unsigned y = 0; y < mTree.GetGridSize().y; y++) {
+		for (unsigned x = 0; x < mTree.GetGridSize().x; x++) {
+			mTree.GetNode(x, y)->mScore = 10000;
+			mTree.GetNode(x, y)->mEstimate = 10000;
 		}
 	}
 
-	startn->score = 0;
-	startn->estimate = heuristic(startn, goaln);
+	mStartNode->mScore = 0;
+	mStartNode->mEstimate = Heuristic(mStartNode, mGoalNode);
 
-	open.insert(startn);
+	mOpenList.insert(mStartNode);
 
-	goal_found = false;
+	mGoalFound = false;
 
-	cout << "Starting at (" << startn->pos.x << ", " << startn->pos.y << ")\n";
-	cout << "Finding (" << goaln->pos.x << ", " << goaln->pos.y << ")\n\n";
+	cout << "Starting at (" << mStartNode->mPos.x << ", " << mStartNode->mPos.y << ")\n";
+	cout << "Finding (" << mGoalNode->mPos.x << ", " << mGoalNode->mPos.y << ")\n\n";
 }
 
-int AStar::step() {
-	if (!open.empty()) {
+int CAStar::Step() {
+	if (!mOpenList.empty()) {
 		mNumSearches++;
 
-		Tree::Node current;
-		int min_score = 10000;
+		CTree::Node current;
+		int minScore = 10000;
 
-		for (auto n : open)
-			if (n->estimate < min_score)
-				min_score = n->estimate, current = n;
+		for (auto n : mOpenList)
+			if (n->mEstimate < minScore)
+				minScore = n->mEstimate, current = n;
 
-		if (current == goaln) {
-			goal_found = true;
-			construct_path();
+		if (current == mGoalNode) {
+			mGoalFound = true;
+			mConstructPath();
 			return Found;
 		}
 
-		open.erase(current);
-		closed.insert(current);
+		mOpenList.erase(current);
+		mClosedList.insert(current);
 
-		std::vector<Tree::Node> next;
+		std::vector<CTree::Node> next;
 
-		next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x, current->pos.y + 1)));
-		next.push_back(tree.findNode(Vec2<>(current->pos.x, current->pos.y - 1)));
+		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x + 1, current->mPos.y)));
+		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y)));
+		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x, current->mPos.y + 1)));
+		next.push_back(mTree.FindNode(Vec2<>(current->mPos.x, current->mPos.y - 1)));
 		
-		if (useDiag) {
-			next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y + 1)));
-			next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y - 1)));
-			next.push_back(tree.findNode(Vec2<>(current->pos.x - 1, current->pos.y + 1)));
-			next.push_back(tree.findNode(Vec2<>(current->pos.x + 1, current->pos.y - 1)));
+		if (mUseDiag) {
+			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x + 1, current->mPos.y + 1)));
+			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y - 1)));
+			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x - 1, current->mPos.y + 1)));
+			next.push_back(mTree.FindNode(Vec2<>(current->mPos.x + 1, current->mPos.y - 1)));
 		}
 
 		for (auto node : next) {
-			if (node == nullptr || node->cost <= 0 || closed.find(node) != closed.end())
+			if (node == nullptr || node->mCost <= 0 || mClosedList.find(node) != mClosedList.end())
 				continue;
 
-			if (open.find(node) == open.end())
-				open.insert(node);
+			if (mOpenList.find(node) == mOpenList.end())
+				mOpenList.insert(node);
 
-			int n_score = current->score + current->cost;
+			int nScore = current->mScore + current->mCost;
 
-			if (n_score >= node->score)
+			if (nScore >= node->mScore)
 				continue;
 
-			data[node] = current;
-			node->score = n_score;
-			node->estimate = n_score + heuristic(node, goaln);
+			mData[node] = current;
+			node->mScore = nScore;
+			node->mEstimate = nScore + Heuristic(node, mGoalNode);
 		}
 	} else
 		return Failed;
@@ -88,15 +88,15 @@ int AStar::step() {
 	return Searching;
 }
 
-void AStar::construct_path() {
-	if (goal_found) {
-		Tree::Node n = goaln;
-		path.push_back(n->pos);
+void CAStar::mConstructPath() {
+	if (mGoalFound) {
+		CTree::Node n = mGoalNode;
+		mPath.push_back(n->mPos);
 
-		while (n = data[n])
-			path.push_back(n->pos);
+		while (n = mData[n])
+			mPath.push_back(n->mPos);
 
-		reverse(path.begin(), path.end());
+		reverse(mPath.begin(), mPath.end());
 	} else
 		cout << "Could not find path\n\n";
 }

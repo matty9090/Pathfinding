@@ -9,59 +9,59 @@
 #include "Vec3.hpp"
 
 struct _Node {
-	Vec2<> pos;
-	int cost;
-	int score;
-	int estimate;
+	Vec2<> mPos;
+	int mCost;
+	int mScore;
+	int mEstimate;
 
-	_Node(Vec2<> p, int c) : pos(p), cost(c) {};
+	_Node(Vec2<> p, int c) : mPos(p), mCost(c) {};
 };
 
-class Tree {
+class CTree {
 	public:
 		typedef std::shared_ptr<_Node> Node;
 
-		Tree(Vec2<size_t> dims, std::vector<std::vector<Node>> &_grid);
+		CTree(Vec2<size_t> dims, std::vector<std::vector<Node>> &_grid);
 
-		Node setNode(unsigned x, unsigned y, Vec2<> pos, int cost = 1);
-		Node getNode(unsigned x, unsigned y);
-		Node findNode(Vec2<> pos);
+		Node SetNode(unsigned x, unsigned y, Vec2<> pos, int cost = 1);
+		Node GetNode(unsigned x, unsigned y);
+		Node FindNode(Vec2<> pos);
 
-		Vec2<size_t> getGridSize() { return Vec2<size_t>(w, h); }
+		Vec2<size_t> GetGridSize() { return Vec2<size_t>(mWidth, mHeight); }
 
 	private:
-		std::vector<std::vector<Node>> &grid;
+		std::vector<std::vector<Node>> &mGrid;
 
-		size_t w, h;
+		size_t mWidth, mHeight;
 };
 
-class SearchAlgorithm {
+class CSearchAlgorithm {
 	public:
-		enum Status { Found, Searching, Failed };
+		enum EStatus { Found, Searching, Failed };
 
-		SearchAlgorithm(Tree &t, bool diag = false) : tree(t), useDiag(diag) {}
+		CSearchAlgorithm(CTree &t, bool diag = false) : mTree(t), mUseDiag(diag) {}
 
-		virtual void start(Tree::Node start, Tree::Node goal) = 0;
-		virtual int step() = 0;
+		virtual void Start(CTree::Node start, CTree::Node goal) = 0;
+		virtual int Step() = 0;
 		
-		std::vector<Vec2<>> getPath() { return path; }
+		std::vector<Vec2<>> GetPath() { return mPath; }
 
 		int GetNumSearches() { return mNumSearches; }
-		void useDiagonals(bool diag) { useDiag = diag; }
+		void UseDiagonals(bool diag) { mUseDiag = diag; }
 
-		std::set<Tree::Node> getOpenList() { return open; }
-		std::set<Tree::Node> getClosedList() { return closed; }
+		std::set<CTree::Node> GetOpenList() { return mOpenList; }
+		std::set<CTree::Node> GetClosedList() { return mClosedList; }
 
 	protected:
-		Tree &tree;
-		Tree::Node startn, goaln;
+		CTree &mTree;
+		CTree::Node mStartNode, mGoalNode;
 
-		std::vector<Vec2<>> path;
-		std::set<Tree::Node> open;
-		std::set<Tree::Node> closed;
+		std::vector<Vec2<>> mPath;
+		std::set<CTree::Node> mOpenList;
+		std::set<CTree::Node> mClosedList;
 
 		int mNumSearches;
-		bool useDiag;
+		bool mUseDiag;
 
-		int heuristic(Tree::Node start, Tree::Node end);
+		int Heuristic(CTree::Node start, CTree::Node end);
 };

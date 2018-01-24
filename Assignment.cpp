@@ -5,11 +5,11 @@
 
 using namespace tle;
 
-const std::string settings_file = "settings.dat";
+const std::string gSettingsFile = "settings.dat";
 
 void main() {
-	Settings settings(settings_file);
+	CSettings settings(gSettingsFile);
 
-	App app(settings);
+	CApp app(settings);
 	app.run();
 }

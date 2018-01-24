@@ -5,17 +5,17 @@
 
 #include "Vec3.hpp"
 
-class MapLoader {
+class CMapLoader {
 	public:
-		MapLoader();
+		CMapLoader();
 
-		void setDims(size_t _w, size_t _h) { w = _w, h = _h; }
+		void SetDims(size_t w, size_t h) { mWidth = w, mHeight = h; }
 
-		std::vector<std::vector<int>> load(std::string f);
-		std::pair<Vec2<>, Vec2<>> coords(std::string f);
+		std::vector<std::vector<int>> Load(std::string f);
+		std::pair<Vec2<>, Vec2<>> Coords(std::string f);
 
 	private:
-		size_t w, h;
+		size_t mWidth, mHeight;
 
-		void alloc_space(std::vector<std::vector<int>> &v);
+		void AllocSpace(std::vector<std::vector<int>> &v);
 };

@@ -9,25 +9,25 @@
 #include "Settings.hpp"
 #include "State.hpp"
 
-class StateMapChooser : public State {
+class CStateMapChooser : public CState {
 	public:
-		StateMapChooser(tle::I3DEngine *engine, Settings &settings);
+		CStateMapChooser(tle::I3DEngine *engine, CSettings &settings);
 
-		void init();
-		int run();
+		void Init();
+		int Run();
 
 	private:
-		tle::IFont *font;
-		tle::ISprite *spr_bg;
-		tle::ISprite *spr_logo;
+		tle::IFont *mpFont;
+		tle::ISprite *mpSprBg;
+		tle::ISprite *mpSpriteLogo;
 
 		struct MenuItem {
-			std::string txt;
-			int map_id;
-			Vec2<> pos;
+			std::string mTxt;
+			int mMapID;
+			Vec2<> mPos;
 		};
 
-		bool state_change;
-		int selected, return_state;
-		std::map<int, MenuItem> items;
+		bool mStateChange;
+		int mSelected, mReturnState;
+		std::map<int, MenuItem> mItems;
 };

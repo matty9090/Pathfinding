@@ -6,29 +6,29 @@
 
 using namespace std;
 
-MapLoader::MapLoader() {
+CMapLoader::CMapLoader() {
 
 }
 
-std::vector<std::vector<int>> MapLoader::load(std::string map_file) {
-	assert(w > 0 && h > 0);
+std::vector<std::vector<int>> CMapLoader::Load(std::string map_file) {
+	assert(mWidth > 0 && mHeight > 0);
 
 	ifstream mapf(map_file);
 	std::vector<std::vector<int>> v;
 
 	if (mapf.is_open()) {
-		alloc_space(v);
+		AllocSpace(v);
 
-		for (unsigned y = 0; y < h; ++y) {
-			for (unsigned x = 0; x <= w; ++x) {
+		for (unsigned y = 0; y < mHeight; ++y) {
+			for (unsigned x = 0; x <= mWidth; ++x) {
 				char c;
 				mapf.get(c);
 
 				// Skip end of line character
-				if (x >= w)
+				if (x >= mWidth)
 					continue;
 				else
-					v[h - y - 1][x] = (int)(c - '0');
+					v[mHeight - y - 1][x] = (int)(c - '0');
 			}
 		}
 	}
@@ -38,7 +38,7 @@ std::vector<std::vector<int>> MapLoader::load(std::string map_file) {
 	return v;
 }
 
-std::pair<Vec2<>, Vec2<>> MapLoader::coords(std::string coords_file) {
+std::pair<Vec2<>, Vec2<>> CMapLoader::Coords(std::string coords_file) {
 	Vec2<> start, goal;
 
 	ifstream coordf(coords_file);
@@ -57,9 +57,9 @@ std::pair<Vec2<>, Vec2<>> MapLoader::coords(std::string coords_file) {
 	return make_pair(start, goal);
 }
 
-void MapLoader::alloc_space(std::vector<std::vector<int>>& v) {
-	v.resize(h);
+void CMapLoader::AllocSpace(std::vector<std::vector<int>>& v) {
+	v.resize(mHeight);
 
-	for (unsigned i = 0; i < h; ++i)
-		v[i].resize(w);
+	for (unsigned i = 0; i < mHeight; ++i)
+		v[i].resize(mWidth);
 }

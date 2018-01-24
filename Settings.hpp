@@ -7,53 +7,53 @@
 #include "JSON.hpp"
 #include "Vec3.hpp"
 
-class Settings {
+class CSettings {
 	public:
-		Settings(std::string file);
+		CSettings(std::string file);
 
-		void setMap(std::string map_id) { current_map = map_id; }
-		size_t getScreenW() { return window_w; }
-		size_t getScreenH() { return window_h; }
-		float getMapScale() { return map_scale; }
-		std::string getMapsFolder() { return maps_folder; }
+		void SetMap(std::string map_id) { mCurrentMap = map_id; }
+		size_t GetScreenW() { return mWindowW; }
+		size_t GetScreenH() { return mWindowH; }
+		float GetMapScale() { return mMapScale; }
+		std::string GetMapsFolder() { return mMapsFolder; }
 
-		struct Model {
-			std::string file, tex;
-			Vec3<> pos;
-			bool inst;
-			float scale;
+		struct SModel {
+			std::string mFile, mTex;
+			Vec3<> mPos;
+			bool mInst;
+			float mScale;
 		};
 
-		struct Map {
-			std::string map_file, coords_file;
-			Vec2<size_t> dims;
+		struct SMap {
+			std::string mMapFile, mCoordsFile;
+			Vec2<size_t> mDims;
 		};
 
-		struct KeyDesc {
-			std::string desc;
-			tle::EKeyCode code;
+		struct SKeyDesc {
+			std::string mDesc;
+			tle::EKeyCode mCode;
 		};
 
-		std::map<std::string, Model> &getModels() { return models; }
-		std::map<std::string, Map> &getMaps() { return maps; }
-		std::map<std::string, KeyDesc> &getKeys() { return keys; }
-		tle::EKeyCode getKeyCode(std::string txt) { return keys[txt].code; }
+		std::map<std::string, SModel> &GetModels() { return mModels; }
+		std::map<std::string, SMap> &GetMaps() { return mMaps; }
+		std::map<std::string, SKeyDesc> &GetKeys() { return mKeys; }
+		tle::EKeyCode GetKeyCode(std::string txt) { return mKeys[txt].mCode; }
 
-		Map &currentMap() { return maps[current_map]; }
+		SMap &getCurrentMap() { return mMaps[mCurrentMap]; }
 
 	private:
-		picojson::value json;
+		picojson::value mJson;
 
-		float map_scale;
-		size_t window_w, window_h;
-		std::string maps_folder, current_map;
+		float mMapScale;
+		size_t mWindowW, mWindowH;
+		std::string mMapsFolder, mCurrentMap;
 		
-		std::map<std::string, Model> models;
-		std::map<std::string, Map> maps;
-		std::map<std::string, KeyDesc> keys;
+		std::map<std::string, SModel> mModels;
+		std::map<std::string, SMap> mMaps;
+		std::map<std::string, SKeyDesc> mKeys;
 
-		void load_properties();
-		void load_models();
-		void load_maps();
-		void load_keys();
+		void LoadProperties();
+		void LoadModels();
+		void LoadMaps();
+		void LoadKeys();
 };

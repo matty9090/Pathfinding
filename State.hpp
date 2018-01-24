@@ -4,16 +4,16 @@
 
 #include "Settings.hpp"
 
-class State {
+class CState {
 	public:
-		State(tle::I3DEngine *_engine, Settings &_settings) : engine(_engine), settings(_settings) {}
+		CState(tle::I3DEngine *engine, CSettings &settings) : mpEngine(engine), mSettings(settings) {}
 
-		virtual void init() = 0;
-		virtual int run() = 0;
+		virtual void Init() = 0;
+		virtual int Run() = 0;
 
-		enum States { Menu, MapChooser, Pathfinder, Exit };
+		enum EStates { Menu, MapChooser, Pathfinder, Exit };
 
 	protected:
-		Settings &settings;
-		tle::I3DEngine *engine;
+		CSettings &mSettings;
+		tle::I3DEngine *mpEngine;
 };

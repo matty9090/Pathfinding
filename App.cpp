@@ -6,27 +6,27 @@
 
 using namespace tle;
 
-App::App(Settings &s) : settings(s) {
-	eng = New3DEngine(kTLX);
+CApp::CApp(CSettings &s) : mSettings(s) {
+	mEng = New3DEngine(kTLX);
 
-	eng->StartWindowed(settings.getScreenW(), settings.getScreenH());
-	eng->SetWindowCaption("Pathfinding");
-	eng->AddMediaFolder("./res");
+	mEng->StartWindowed(mSettings.GetScreenW(), mSettings.GetScreenH());
+	mEng->SetWindowCaption("Pathfinding");
+	mEng->AddMediaFolder("./res");
 
-	state = State::Menu;
+	mState = CState::Menu;
 
-	states.push_back(make_unique<StateMenu>(eng, settings));
-	states.push_back(make_unique<StateMapChooser>(eng, settings));
-	states.push_back(make_unique<StatePathfinder>(eng, settings));
+	mStates.push_back(make_unique<CStateMenu>(mEng, mSettings));
+	mStates.push_back(make_unique<CStateMapChooser>(mEng, mSettings));
+	mStates.push_back(make_unique<CStatePathfinder>(mEng, mSettings));
 }
 
-App::~App() {
-	eng->Delete();
+CApp::~CApp() {
+	mEng->Delete();
 }
 
-void App::run() {
+void CApp::run() {
 	do {
-		states[state]->init();
-		state = states[state]->run();
-	} while (state != State::Exit);
+		mStates[mState]->Init();
+		mState = mStates[mState]->Run();
+	} while (mState != CState::Exit);
 }

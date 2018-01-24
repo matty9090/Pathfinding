@@ -12,65 +12,65 @@
 #include "BFS.hpp"
 #include "AStar.hpp"
 
-class StatePathfinder : public State {
+class CStatePathfinder : public CState {
 	public:
-		StatePathfinder(tle::I3DEngine *engine, Settings &settings);
+		CStatePathfinder(tle::I3DEngine *engine, CSettings &settings);
 
-		void init();
-		int run();
+		void Init();
+		int Run();
 
-		void load_maps();
-		void load_models();
-		void free_memory();
+		void LoadMaps();
+		void LoadModels();
+		void FreeMemory();
 
 	private:
-		Tree tree;
-		Tree::Node start, goal;
-		Vec2<size_t> dims;
+		CTree mTree;
+		CTree::Node mStart, mGoal;
+		Vec2<size_t> mDims;
 
-		bool a_found, b_found, useDiag, bezier;
-		int pathNum;
-		float scale, timer;
-		Vec3<> origin;
+		bool mFoundA, mFoundB, mUseDiag, mBezier;
+		int mPathNum;
+		float mScale, mTimer;
+		Vec3<> mOrigin;
 
-		enum Algorithms { AlgBfs, AlgAStar, AlgBoth };
-		int alg;
+		enum EAlgorithms { AlgBfs, AlgAStar, AlgBoth };
+		int mAlg;
 
-		tle::ICamera *cam;
-		tle::IFont *font;
-		std::string key_list;
+		tle::ICamera *mpCam;
+		tle::IFont *mpFont;
+		std::string mKeyList;
 
-		std::shared_ptr<SearchAlgorithm> a_searcher, b_searcher;
-		std::vector<tle::IModel*> search_path;
-		std::vector<std::vector<tle::IModel*>> path;
+		std::shared_ptr<CSearchAlgorithm> mSearcherA, mSearcherB;
+		std::vector<tle::IModel*> mSearchPath;
+		std::vector<std::vector<tle::IModel*>> mPath;
 
-		std::map<std::string, tle::IMesh*> meshes;
-		std::map<std::string, tle::IModel*> models;
-		std::map<int, std::pair<std::string, int>> node_types;
+		std::map<std::string, tle::IMesh*> mMeshes;
+		std::map<std::string, tle::IModel*> mModels;
+		std::map<int, std::pair<std::string, int>> mNodeTypes;
 
-		struct NodeMap {
-			std::vector<std::vector<Tree::Node>> map;
-			std::vector<std::vector<tle::IModel*>> models;
+		struct SNodeMap {
+			std::vector<std::vector<CTree::Node>> mMapData;
+			std::vector<std::vector<tle::IModel*>> mModels;
 
-			StatePathfinder &parent;
+			CStatePathfinder &mParent;
 
-			NodeMap(StatePathfinder &_parent) : parent(_parent) {}
+			SNodeMap(CStatePathfinder &parent) : mParent(parent) {}
 
 			void constructMap(Vec3<> origin, float scale);
 			inline Vec3<> translate(Vec2<> coord, Vec3<> &origin, float scale);
-		} map;
+		} mMap;
 
 		float cspline(float p1, float p2, float p3, float p4, float t);
 		float bspline(float p1, float p2, float p3, float p4, float t);
 		float lerp(float v0, float v1, float t);
 
-		void handleInput();
-		void displayGUI();
-		void clearPathSearch();
-		void clearPathLine();
-		void writeResults(std::vector<Vec2<>> path, string ext, int searches);
-		void displayPathSearch(std::set<Tree::Node> open, std::set<Tree::Node> closed, string id);
-		void displayPathBezier(std::vector<Vec2<>> path, std::string id);
-		void displayPathCatmullRom(std::vector<Vec2<>> path, std::string id);
-		void cleanup();
+		void HandleInput();
+		void DisplayGUI();
+		void ClearPathSearch();
+		void ClearPathLine();
+		void WriteResults(std::vector<Vec2<>> path, string ext, int searches);
+		void DisplayPathSearch(std::set<CTree::Node> open, std::set<CTree::Node> closed, string id);
+		void DisplayPathBezier(std::vector<Vec2<>> path, std::string id);
+		void DisplayPathCatmullRom(std::vector<Vec2<>> path, std::string id);
+		void Cleanup();
 };

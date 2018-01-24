@@ -2,17 +2,17 @@
 
 #include "Tree.hpp"
 
-class BFS : public SearchAlgorithm {
+class CBFS : public CSearchAlgorithm {
 	public:
-		BFS(Tree &tree);
+		CBFS(CTree &tree);
 
-		void start(Tree::Node start, Tree::Node goal);
-		int step();
+		void Start(CTree::Node Start, CTree::Node goal);
+		int Step();
 
 	private:
-		std::map<Tree::Node, Tree::Node> data;
+		std::map<CTree::Node, CTree::Node> mData;
 
-		bool goal_found;
+		bool mGoalFound;
 
-		void construct_path();
+		void mConstructPath();
 };

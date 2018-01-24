@@ -1067,9 +1067,9 @@ namespace picojson {
 	};
 
 	// obsolete, use the version below
-	template <typename Iter> inline std::string parse(value &out, Iter &pos, const Iter &last) {
+	template <typename Iter> inline std::string parse(value &out, Iter &mPos, const Iter &last) {
 		std::string err;
-		pos = parse(out, pos, last, &err);
+		mPos = parse(out, mPos, last, &err);
 		return err;
 	}
 

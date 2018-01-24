@@ -9,30 +9,30 @@
 #include "Settings.hpp"
 #include "State.hpp"
 
-class StateMenu : public State {
+class CStateMenu : public CState {
 	public:
-		StateMenu(tle::I3DEngine *engine, Settings &settings);
+		CStateMenu(tle::I3DEngine *engine, CSettings &settings);
 
-		void init();
-		int run();
+		void Init();
+		int Run();
 
 	private:
-		typedef void(StateMenu::*MenuAction)();
+		typedef void(CStateMenu::*MenuAction)();
 
-		tle::IFont *font;
-		tle::ISprite *spr_bg;
-		tle::ISprite *spr_logo;
+		tle::IFont *mpFont;
+		tle::ISprite *mpSprBg;
+		tle::ISprite *mpSprLogo;
 
 		struct MenuItem {
-			std::string txt;
-			MenuAction action;
-			Vec2<> pos;
+			std::string mTxt;
+			MenuAction mAction;
+			Vec2<> mPos;
 		};
 
-		bool state_change;
-		int selected, return_state;
-		std::map<int, MenuItem> items;
+		bool mStateChange;
+		int mSelected, mReturnState;
+		std::map<int, MenuItem> mItems;
 
-		void action_select();
-		void action_exit();
+		void ActionSelect();
+		void ActionExit();
 };
