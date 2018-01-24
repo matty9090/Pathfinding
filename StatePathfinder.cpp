@@ -10,10 +10,10 @@ using namespace tle;
 CStatePathfinder::CStatePathfinder(tle::I3DEngine *engine, CSettings &settings)
 	: CState(engine, settings), mMap(*this), mTree(settings.GetMapSize(), mMap.mMapData)
 {
-	mNodeTypes[0] = make_pair("Wall", 0);
-	mNodeTypes[1] = make_pair("Clear", 1);
-	mNodeTypes[2] = make_pair("Wood", 2);
-	mNodeTypes[3] = make_pair("Water", 3);
+	mNodeTypes[0] = make_pair("Wall", mSettings.GetNodeCosts()["Wall"]);
+	mNodeTypes[1] = make_pair("Clear", mSettings.GetNodeCosts()["Clear"]);
+	mNodeTypes[2] = make_pair("Wood", mSettings.GetNodeCosts()["Wood"]);
+	mNodeTypes[3] = make_pair("Water", mSettings.GetNodeCosts()["Water"]);
 }
 
 // Initialise path finding variables and scene
@@ -29,11 +29,11 @@ void CStatePathfinder::Init() {
 		mKeyList += key.second.mDesc + "  /  ";
 
 	// Remove last '/' from the list
-	mKeyList = mKeyList.substr(0, mKeyList.length() - 5);
+	mKeyList = mKeyList.substr(0, mKeyList.length() - strlen("  /  "));
 
 	// Set up camera and load GUI font
-	mpCam = mpEngine->CreateCamera(tle::kManual, 0.0f, 100.0f, -25.f);
-	mpFont = mpEngine->LoadFont("res/Arial.ttf", 24U);
+	mpCam = mpEngine->CreateCamera(tle::kManual, mSettings.GetCamPos().x, mSettings.GetCamPos().y, mSettings.GetCamPos().z);
+	mpFont = mpEngine->LoadFont("res/Arial.ttf", mSettings.GetGameFontSize());
 
 	// Load map and models
 	LoadMaps();
@@ -41,7 +41,7 @@ void CStatePathfinder::Init() {
 
 	// Set up the map scale and origin so it's positioned properly
 	mScale = mSettings.GetMapScale();
-	mOrigin = Vec3<>(mScale / 2.0f - (((float)mDims.x * mScale) / 2.0f), 12.0f, 10.0f);
+	mOrigin = Vec3<>(mScale / 2.0f - (((float)mDims.x * mScale) / 2.0f), mSettings.GetOrigin().y, mSettings.GetOrigin().z);
 	mAlg = AlgAStar;
 
 	// Use helper class to attach models to the node grid
@@ -62,7 +62,7 @@ int CStatePathfinder::Run() {
 
 		// Steps through the algorithm one time every 0.07 seconds
 		if (mTimer < 0.0f) {
-			mTimer = 0.07f;
+			mTimer = mSettings.GetStepSpeed();
 
 			// If A* not found goal step through
 			if (!mFoundA) {
@@ -166,7 +166,7 @@ void CStatePathfinder::LoadModels() {
 	assert(mMeshes.find("Wall")  != mMeshes.end());
 
 	// Rotate the camera down for a top down view
-	mpCam->RotateX(50.0f);
+	mpCam->RotateX(mSettings.GetCamRot());
 }
 
 // Free up the map data memory
@@ -258,8 +258,8 @@ void CStatePathfinder::DisplayGUI() {
 	string diagStr = (mUseDiag ? "On" : "Off");
 	string curvStr = (mBezier ? "Bezier" : "Catmul-Rom");
 
-	mpFont->Draw(mKeyList, 10, 10, kWhite);
-	mpFont->Draw("Diagonals: " + diagStr + "  /  " + "Curve: " + curvStr + "  /  " + "Algorithm: " + algStr, 10, 34, kLightGrey);
+	mpFont->Draw(mKeyList, mSettings.GetKeysPos().x, mSettings.GetKeysPos().y, kWhite);
+	mpFont->Draw("Diagonals: " + diagStr + "  /  " + "Curve: " + curvStr + "  /  " + "Algorithm: " + algStr, mSettings.GetInfoPos().x, mSettings.GetInfoPos().y, kLightGrey);
 }
 
 // Clear all the models associated with the path line
@@ -301,7 +301,7 @@ void CStatePathfinder::DisplayPathSearch(std::set<CTree::Node> open, std::set<CT
 		int x = node->mPos.x, y = node->mPos.y;
 
 		// Create model and display at correct position using the scale and origin of the map
-		mSearchPath.push_back(mMeshes["OpenList" + id]->CreateModel(x * mScale + mOrigin.x, mOrigin.y + 5.0f, y * mScale + mOrigin.z));
+		mSearchPath.push_back(mMeshes["OpenList" + id]->CreateModel(x * mScale + mOrigin.x, mOrigin.y + mSettings.GetHoverHeight(), y * mScale + mOrigin.z));
 		mSearchPath.back()->SetSkin(mSettings.GetModels()["OpenList" + id].mTex);
 		mSearchPath.back()->Scale(mSettings.GetModels()["OpenList" + id].mScale);
 	}
@@ -310,7 +310,7 @@ void CStatePathfinder::DisplayPathSearch(std::set<CTree::Node> open, std::set<CT
 		int x = node->mPos.x, y = node->mPos.y;
 
 		// Create model and display at correct position using the scale and origin of the map
-		mSearchPath.push_back(mMeshes["ClosedList" + id]->CreateModel(x * mScale + mOrigin.x, mOrigin.y + 5.0f, y * mScale + mOrigin.z));
+		mSearchPath.push_back(mMeshes["ClosedList" + id]->CreateModel(x * mScale + mOrigin.x, mOrigin.y + mSettings.GetHoverHeight(), y * mScale + mOrigin.z));
 		mSearchPath.back()->SetSkin(mSettings.GetModels()["ClosedList" + id].mTex);
 		mSearchPath.back()->Scale(mSettings.GetModels()["ClosedList" + id].mScale);
 	}
@@ -323,7 +323,7 @@ void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 		mPath.resize(++mPathNum);
 		
 		// How many models to draw in 1 line segment
-		int steps = 30;
+		int steps = mSettings.GetBezierSteps();
 
 		// Loop through every path node
 		for (unsigned i = 0; i < p.size(); i++) {
@@ -350,7 +350,7 @@ void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 					float cy = bspline(p1.y, p2.y, p3.y, p4.y, (float)n / (float)steps);
 
 					// Create model and display at correct position using the scale and origin of the map
-					mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + 5.0f + (mPathNum), cy * mScale + mOrigin.z));
+					mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + mSettings.GetHoverHeight() + (mPathNum), cy * mScale + mOrigin.z));
 					mPath[mPathNum - 1].back()->SetSkin(mSettings.GetModels()[id].mTex);
 					mPath[mPathNum - 1].back()->Scale(mSettings.GetModels()[id].mScale);
 				}
@@ -361,7 +361,7 @@ void CStatePathfinder::DisplayPathBezier(std::vector<Vec2<>> p, string id) {
 					float cy = lerp(pm.y - dirA.y / 2.0f, pm.y + dirB.y / 2.0f, (float)n / (float)steps);
 
 					// Create model and display at correct position using the scale and origin of the map
-					mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + 5.0f + (mPathNum), cy * mScale + mOrigin.z));
+					mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + mSettings.GetHoverHeight() + (mPathNum), cy * mScale + mOrigin.z));
 					mPath[mPathNum - 1].back()->SetSkin(mSettings.GetModels()[id].mTex);
 					mPath[mPathNum - 1].back()->Scale(mSettings.GetModels()[id].mScale);
 				}
@@ -377,7 +377,7 @@ void CStatePathfinder::DisplayPathCatmullRom(std::vector<Vec2<>> p, string id) {
 		mPath.resize(++mPathNum);
 
 		// How many models to draw in 1 line segment
-		int steps = 14;
+		int steps = mSettings.GetCatmullSteps();
 
 		// Loop through every path node
 		for (unsigned i = 0; i < p.size(); i++) {
@@ -393,7 +393,7 @@ void CStatePathfinder::DisplayPathCatmullRom(std::vector<Vec2<>> p, string id) {
 				float cy = cspline((float)p1.y, (float)p2.y, (float)p3.y, (float)p4.y, (float)i / (float)steps);
 
 				// Create model and display at correct position using the scale and origin of the map
-				mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + 5.0f + (mPathNum), cy * mScale + mOrigin.z));
+				mPath[mPathNum - 1].push_back(mMeshes[id]->CreateModel(cx * mScale + mOrigin.x, mOrigin.y + mSettings.GetHoverHeight() + (mPathNum), cy * mScale + mOrigin.z));
 				mPath[mPathNum - 1].back()->SetSkin(mSettings.GetModels()[id].mTex);
 				mPath[mPathNum - 1].back()->Scale(mSettings.GetModels()[id].mScale);
 			}

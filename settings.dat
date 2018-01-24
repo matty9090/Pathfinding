@@ -6,11 +6,37 @@
 	"menu_items_y": 380,
 	"menu_items_spacing": 56,
 	"menu_font_size": 46,
+	"game_font_size": 24,
+	
 	"logo_x": 314,
 	"logo_y": 76,
 	
+	"origin_x":  0.0,
+	"origin_y": 12.0,
+	"origin_z": 10.0,
+	
+	"cam_x":   0.0,
+	"cam_y":  100.0,
+	"cam_z":  -25.0,
+	"cam_rot": 50.0,
+	
 	"map_scale" : 11,
 	"maps_folder": "maps/",
+	
+	"id_wall":  0,
+	"id_clear": 1,
+	"id_wood":  2,
+	"id_water": 3,
+	
+	"ui_keys_x": 10,
+	"ui_keys_y": 10,
+	"ui_info_x": 10,
+	"ui_info_y": 36,
+	
+	"step_speed": 0.07,
+	"bezier_steps": 30,
+	"catmull_steps": 14,
+	"node_hover_height": 5.0,
 	
 	"keys": [
 		{ "use": "Start",				"txt": "F1", "code": 112 },

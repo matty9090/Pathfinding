@@ -8,8 +8,8 @@ CStateMenu::CStateMenu(tle::I3DEngine *engine, CSettings &settings) : CState(eng
 
 void CStateMenu::Init() {
 	// Load UI font and sprites
-	mpFont		= mpEngine->LoadFont("res/HoboStd.otf", 46U);
-	mpSprLogo	= mpEngine->CreateSprite("res/logo.png", 314.0f, 76.0f);
+	mpFont		= mpEngine->LoadFont("res/HoboStd.otf", mSettings.GetMenuFontSize());
+	mpSprLogo	= mpEngine->CreateSprite("res/logo.png", mSettings.GetLogoPos().x, mSettings.GetLogoPos().y);
 	mpSprBg		= mpEngine->CreateSprite("res/bg.jpg");
 
 	// Create menu items
@@ -22,7 +22,7 @@ void CStateMenu::Init() {
 
 	// Align the menu items
 	for (auto &item : mItems) {
-		item.second.mPos = Vec2<>(512, i * 56 + 380);
+		item.second.mPos = Vec2<>(mSettings.GetMenuPos().x, i * mSettings.GetMenuSpacing() + mSettings.GetMenuPos().y);
 		++i;
 	}
 

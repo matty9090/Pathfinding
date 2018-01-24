@@ -9,8 +9,8 @@ CStateMapChooser::CStateMapChooser(tle::I3DEngine *engine, CSettings &settings) 
 
 void CStateMapChooser::Init() {
 	// Load UI font and sprites
-	mpFont			= mpEngine->LoadFont("res/HoboStd.otf", mSettings.getMenuFontSize());
-	mpSpriteLogo	= mpEngine->CreateSprite("res/logo.png", mSettings.getLogoPos().x, mSettings.getLogoPos().y);
+	mpFont			= mpEngine->LoadFont("res/HoboStd.otf", mSettings.GetMenuFontSize());
+	mpSpriteLogo	= mpEngine->CreateSprite("res/logo.png", mSettings.GetLogoPos().x, mSettings.GetLogoPos().y);
 	mpSprBg			= mpEngine->CreateSprite("res/bg.jpg");
 
 	int count = 0;
@@ -27,7 +27,7 @@ void CStateMapChooser::Init() {
 
 	// Align the menu items
 	for (auto &item : mItems) {
-		item.second.mPos = Vec2<>(mSettings.getMenuPos().x, i * mSettings.getMenuSpacing() + mSettings.getMenuPos().y);
+		item.second.mPos = Vec2<>(mSettings.GetMenuPos().x, i * mSettings.GetMenuSpacing() + mSettings.GetMenuPos().y);
 		++i;
 	}
 

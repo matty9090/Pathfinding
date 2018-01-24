@@ -44,25 +44,40 @@ class CSettings {
 		std::map<std::string, SModel> &GetModels() { return mModels; }
 		std::map<std::string, SMap> &GetMaps() { return mMaps; }
 		std::map<std::string, SKeyDesc> &GetKeys() { return mKeys; }
+		std::map<string, int> GetNodeCosts() { return mNodeCosts; }
 		tle::EKeyCode GetKeyCode(std::string txt) { return mKeys[txt].mCode; }
 
 		SMap &GetCurrentMap() { return mMaps[mCurrentMap]; }
 		Vec2<size_t> GetMapSize() { return Vec2<size_t>(10, 10); }
 
-		int getMenuSpacing() { return mMenuSpacing; }
-		Vec2<float> getLogoPos() { return mLogoPos; }
-		Vec2<float> getMenuPos() { return mMenuPos; }
-		size_t getMenuFontSize() { return mMenuFontSize; }
+		int GetMenuSpacing() { return mMenuSpacing; }
+		int GetBezierSteps() { return mBezierSteps; }
+		int GetCatmullSteps() { return mCatmullSteps; }
+		float GetStepSpeed() { return mStepSpeed; }
+		float GetCamRot() { return mCameraRot; }
+		float GetHoverHeight() { return mHoverHeight; }
+		size_t GetMenuFontSize() { return mMenuFontSize; }
+		size_t GetGameFontSize() { return mGameFontSize; }
+		Vec2<float> GetLogoPos() { return mLogoPos; }
+		Vec2<float> GetMenuPos() { return mMenuPos; }
+		Vec2<float> GetKeysPos() { return mKeysPos; }
+		Vec2<float> GetInfoPos() { return mInfoPos; }
+		Vec3<> GetOrigin() { return mOrigin; }
+		Vec3<> GetCamPos() { return mCameraPos; }
 
 	private:
 		picojson::value mJson;
 
-		float mMapScale;
-		size_t mWindowW, mWindowH, mMenuFontSize;
+		float mMapScale, mStepSpeed, mCameraRot, mHoverHeight;
+		size_t mWindowW, mWindowH;
+		size_t mMenuFontSize, mGameFontSize;
 		std::string mMapsFolder, mCurrentMap;
+		std::map<string, int> mNodeCosts;
 
 		int mMenuSpacing;
-		Vec2<float> mLogoPos, mMenuPos;
+		int mBezierSteps, mCatmullSteps;
+		Vec2<float> mLogoPos, mMenuPos, mKeysPos, mInfoPos;
+		Vec3<> mOrigin, mCameraPos;
 		
 		std::map<std::string, SModel> mModels;
 		std::map<std::string, SMap> mMaps;

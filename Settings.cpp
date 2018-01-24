@@ -26,10 +26,34 @@ void CSettings::LoadProperties() {
 	mMapScale	= (float)mJson.get("map_scale").get<double>();
 	mMapsFolder	= mJson.get("maps_folder").get<string>();
 
-	mMenuPos = Vec2<float>((float)mJson.get("menu_items_x").get<double>(), (float)mJson.get("menu_items_y").get<double>());
-	mLogoPos = Vec2<float>((float)mJson.get("logo_x").get<double>(), (float)mJson.get("logo_y").get<double>());
-	mMenuSpacing = (int)mJson.get("menu_items_spacing").get<double>();
-	mMenuFontSize = (size_t)mJson.get("menu_font_size").get<double>();
+	mMenuPos		= Vec2<float>((float)mJson.get("menu_items_x").get<double>(), (float)mJson.get("menu_items_y").get<double>());
+	mLogoPos		= Vec2<float>((float)mJson.get("logo_x").get<double>(), (float)mJson.get("logo_y").get<double>());
+	mMenuSpacing	= (int)mJson.get("menu_items_spacing").get<double>();
+	mMenuFontSize	= (size_t)mJson.get("menu_font_size").get<double>();
+	mGameFontSize   = (size_t)mJson.get("game_font_size").get<double>();
+	mHoverHeight	= (float)mJson.get("node_hover_height").get<double>();
+	mStepSpeed		= (float)mJson.get("step_speed").get<double>();
+	mBezierSteps	= (int)mJson.get("bezier_steps").get<double>();
+	mCatmullSteps	= (int)mJson.get("catmull_steps").get<double>();
+
+	mOrigin.x = (float)mJson.get("origin_x").get<double>();
+	mOrigin.y = (float)mJson.get("origin_y").get<double>();
+	mOrigin.z = (float)mJson.get("origin_z").get<double>();
+
+	mCameraPos.x = (float)mJson.get("cam_x").get<double>();
+	mCameraPos.y = (float)mJson.get("cam_y").get<double>();
+	mCameraPos.z = (float)mJson.get("cam_z").get<double>();
+	mCameraRot   = (float)mJson.get("cam_rot").get<double>();
+
+	mKeysPos.x = (float)mJson.get("ui_keys_x").get<double>();
+	mKeysPos.y = (float)mJson.get("ui_keys_y").get<double>();
+	mInfoPos.x = (float)mJson.get("ui_info_x").get<double>();
+	mInfoPos.y = (float)mJson.get("ui_info_y").get<double>();
+
+	mNodeCosts["Wall"]  = (int)mJson.get("id_wall").get<double>();
+	mNodeCosts["Clear"] = (int)mJson.get("id_wall").get<double>();
+	mNodeCosts["Wood"]  = (int)mJson.get("id_wall").get<double>();
+	mNodeCosts["Water"] = (int)mJson.get("id_wall").get<double>();
 }
 
 // Load the list of models needed
