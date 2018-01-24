@@ -12,7 +12,7 @@ CTree::CTree(Vec2<size_t> dims, std::vector<std::vector<Node>> &_grid) : mWidth(
 }
 
 CTree::Node CTree::SetNode(unsigned x, unsigned y, Vec2<> mPos, int mCost) {
-	Node n = make_shared<_Node>(mPos, mCost);
+	Node n = make_shared<SNode>(mPos, mCost);
 	mGrid[y][x] = n;
 
 	return n;

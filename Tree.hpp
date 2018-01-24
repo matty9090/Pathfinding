@@ -8,20 +8,20 @@
 
 #include "Vec3.hpp"
 
-struct _Node {
+struct SNode {
 	Vec2<> mPos;
 	int mCost;
 	int mScore;
 	int mEstimate;
 
-	_Node(Vec2<> p, int c) : mPos(p), mCost(c) {};
+	SNode(Vec2<> p, int c) : mPos(p), mCost(c) {};
 };
 
 class CTree {
 	public:
-		typedef std::shared_ptr<_Node> Node;
+		typedef std::shared_ptr<SNode> Node;
 
-		CTree(Vec2<size_t> dims, std::vector<std::vector<Node>> &_grid);
+		CTree(Vec2<size_t> dims, std::vector<std::vector<Node>> &grid);
 
 		Node SetNode(unsigned x, unsigned y, Vec2<> pos, int cost = 1);
 		Node GetNode(unsigned x, unsigned y);
