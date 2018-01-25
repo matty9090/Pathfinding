@@ -472,6 +472,7 @@ void CStatePathfinder::SNodeMap::constructMap(Vec3<> origin, float scale)
 		for (unsigned x = 0; x < mParent.mDims.y; ++x)
 		{
 			// Get the type of node (Wood, Water etc...)
+			assert(mParent.mNodeTypes.find(mMapData[y][x]->mCost) != mParent.mNodeTypes.end());
 			string type = mParent.mNodeTypes[mMapData[y][x]->mCost].first;
 
 			// Get the world position using the origin and scale of the map
